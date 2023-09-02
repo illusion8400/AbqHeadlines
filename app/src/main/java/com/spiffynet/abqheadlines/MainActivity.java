@@ -5,10 +5,15 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import org.jsoup.Jsoup;
@@ -132,7 +137,31 @@ public class MainActivity extends AppCompatActivity {
             for (NewsItem item : newsItems) {
                 titles.add(item.getTitle());
             }
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, titles);
+//            ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, titles);
+            ArrayAdapter<NewsItem> adapter = new ArrayAdapter<NewsItem>(
+                    MainActivity.this,
+                    R.layout.list_item_layout, // Use your custom layout
+                    R.id.item_title,            // TextView for the title
+                    newsItems) {
+                @NonNull
+                @Override
+                public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                    View view = super.getView(position, convertView, parent);
+
+                    // Customize the appearance of each list item here
+                    TextView titleTextView = view.findViewById(R.id.item_title);
+                    TextView linkTextView = view.findViewById(R.id.item_link);
+
+                    NewsItem newsItem = getItem(position);
+
+                    if (newsItem != null) {
+                        titleTextView.setText(newsItem.getTitle());
+                        linkTextView.setText(newsItem.getLink());
+                    }
+
+                    return view;
+                }
+            };
             listView.setAdapter(adapter);
         }
     }
