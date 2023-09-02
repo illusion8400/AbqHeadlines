@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 for (Element element : koatElements) {
                     String title = element.text().trim();
                     String link = element.select("a").attr("href");
-                    newsItems.add(new NewsItem(title, "https://www.koat.com" + link));
+                    newsItems.add(new NewsItem(title, "http://www.koat.com" + link));
                 }
             } catch (IOException e) {
                 e.printStackTrace();
