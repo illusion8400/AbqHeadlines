@@ -1,0 +1,15 @@
+# CHANGELOG.md AbqHeadlines
+
+- v1.2 
+  - Fixed refresh. More like a reload
+  - Added CHANGELOG.md
+
+- v1.1.1
+    - Fixed bug
+
+- v1.1
+    - Reworked UI. Easier to look at.
+    - Adjusted colors for Dark/Light mode.
+
+- v1.0
+    - Initial Release

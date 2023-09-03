@@ -24,10 +24,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/** @noinspection deprecation*/
 public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
-    private List<NewsItem> newsItems = new ArrayList<>();
+    private final List<NewsItem> newsItems = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -59,18 +61,11 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                // Execute your web scraping task to refresh the data
 
                 new FetchNewsTask().execute();
-                // Update the ListView with the newsItems
-                List<String> titles = new ArrayList<>();
-                for (NewsItem item : newsItems) {
-                    titles.add(item.getTitle());
-                }
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, titles);
-                listView.setAdapter(adapter);
-                swipeRefreshLayout.setRefreshing(false);
-
+                finish();
+                startActivity(getIntent());
+                Toast.makeText(MainActivity.this, "Refresh", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -126,18 +121,11 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            // Update the ListView with the newsItems
-            List<String> titles = new ArrayList<>();
-            for (NewsItem item : newsItems) {
-                titles.add(item.getTitle());
-            }
-//            ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this, android.R.layout.simple_list_item_1, titles);
             ArrayAdapter<NewsItem> adapter = new ArrayAdapter<NewsItem>(
                     MainActivity.this,
                     R.layout.list_item_layout, // Use your custom layout
@@ -163,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             };
             listView.setAdapter(adapter);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
