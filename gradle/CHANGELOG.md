@@ -1,5 +1,9 @@
 # CHANGELOG.md AbqHeadlines
 
+- v1.2.1
+  - Added indicator for which website is being pulled
+  - Added more headlines. Some of these don't have links. TODO: Fix
+  
 - v1.2 
   - Fixed refresh. More like a reload
   - Added CHANGELOG.md

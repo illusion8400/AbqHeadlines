@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(Void... voids) {
             // KRQE
+            newsItems.add(new NewsItem("KRQE: ", "http://www.krqe.com"));
             try {
                 Document krqeDoc = Jsoup.connect("http://www.krqe.com").get();
                 Elements krqeElements = krqeDoc.select("h3.article-list__article-title");
@@ -107,8 +108,8 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             // KOAT
+            newsItems.add(new NewsItem("KOAT: ", "http://www.koat.com"));
             try {
                 Document koatDoc = Jsoup.connect("http://www.koat.com").get();
                 Elements koatElements = koatDoc.select("h2");
@@ -121,6 +122,23 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            // KOB
+            newsItems.add(new NewsItem("KOB: ", "http://www.kob.com"));
+            try {
+                Document kobDoc = Jsoup.connect("http://www.kob.com").get();
+
+                Elements kobElements = kobDoc.select("h6");
+//                kobElements = kobDoc.select("h4");
+
+                for (Element element : kobElements) {
+                    String title = element.text().trim();
+                    String link = element.select("a").attr("href");
+                    newsItems.add(new NewsItem(title, link));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             return null;
         }
 
