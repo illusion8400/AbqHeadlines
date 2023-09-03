@@ -7,3 +7,5 @@ Must allow 'install from unknown sources' or 'install unknown apps' in the phone
 - v1.2
   - Fixed refresh. More like a reload
   - Added CHANGELOG.md
+
+![Alt text](/Screenshot1.png "Screenshot1")
