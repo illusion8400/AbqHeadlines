@@ -10,10 +10,10 @@ android {
         applicationId = "com.spiffynet.abqheadlines"
         minSdk = 24
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionName = "1.2.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        versionCode = 1
     }
 
     buildTypes {
