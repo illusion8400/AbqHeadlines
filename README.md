@@ -10,6 +10,6 @@ Must allow 'install from unknown sources' or 'install unknown apps' in the phone
   - Upgraded dependency
 
 
-![Alt text](/Screenshot1.png "Screenshot2")
+![Alt text](/Screenshot2.png "Screenshot2")
 
 ![Alt text](/Screenshot1.png "Screenshot1")
