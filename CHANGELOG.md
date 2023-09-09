@@ -1,4 +1,7 @@
 # CHANGELOG.md AbqHeadlines
+- v1.3
+  - Added front page and seperated sites
+  - Code cleanup lambda
 
 - v1.2.1
   - Added indicator for which website is being pulled
