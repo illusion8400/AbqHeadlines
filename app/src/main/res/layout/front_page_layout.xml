@@ -7,35 +7,48 @@
     tools:context=".FrontPage">
 
     <!-- ImageButton 1 -->
+    <TextView
+        android:id="@+id/front_text"
+        android:layout_width="276dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:gravity="center"
+        android:text="@string/app_name"
+        android:textSize="25sp" />
+
     <ImageButton
         android:id="@+id/krqe_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/krqe"
+        android:layout_width="143dp"
+        android:layout_height="144dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:onClick="onImageButtonClick" />
+        android:layout_marginTop="100dp"
+        android:backgroundTint="#2630D4"
+        android:onClick="onImageButtonClick"
+        android:src="@mipmap/krqe" />
 
     <!-- ImageButton 2 -->
     <ImageButton
         android:id="@+id/koat_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher_foreground"
+        android:layout_width="141dp"
+        android:layout_height="143dp"
         android:layout_below="@id/krqe_img"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:onClick="onImageButtonClick" />
+        android:backgroundTint="#2630D4"
+        android:onClick="onImageButtonClick"
+        android:src="@mipmap/koat" />
 
     <!-- ImageButton 3 -->
     <ImageButton
         android:id="@+id/kob_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher_foreground"
+        android:layout_width="141dp"
+        android:layout_height="143dp"
         android:layout_below="@id/koat_img"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:onClick="onImageButtonClick" />
+        android:backgroundTint="#000000"
+        android:onClick="onImageButtonClick"
+        android:src="@mipmap/kob" />
 
 </RelativeLayout>

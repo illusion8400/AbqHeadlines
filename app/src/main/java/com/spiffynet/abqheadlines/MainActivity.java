@@ -43,50 +43,41 @@ public class MainActivity extends AppCompatActivity {
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
 
         // Set a click listener for the ListView items
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NewsItem selectedItem = newsItems.get(position);
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            NewsItem selectedItem = newsItems.get(position);
 
-                // Check if the link is not empty
-                if (!selectedItem.getLink().isEmpty()) {
-                    // Open the default browser with the link URL
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(selectedItem.getLink()));
-                    startActivity(browserIntent);
-                } else {
-                    Toast.makeText(MainActivity.this, "No link available", Toast.LENGTH_SHORT).show();
-                }
+            // Check if the link is not empty
+            if (!selectedItem.getLink().isEmpty()) {
+                // Open the default browser with the link URL
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(selectedItem.getLink()));
+                startActivity(browserIntent);
+            } else {
+                Toast.makeText(MainActivity.this, "No link available", Toast.LENGTH_SHORT).show();
             }
         });
 
         // Set up SwipeRefreshLayout for refreshing
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
 
-                new FetchNewsTask().execute();
-                finish();
-                startActivity(getIntent());
-                Toast.makeText(MainActivity.this, "Refresh", Toast.LENGTH_SHORT).show();
-            }
+            new FetchNewsTask().execute();
+            finish();
+            startActivity(getIntent());
+            Toast.makeText(MainActivity.this, "Refresh", Toast.LENGTH_SHORT).show();
         });
 
         // Start the web scraping task
         new FetchNewsTask().execute();
 
         // Set a click listener for the ListView items
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                NewsItem selectedItem = newsItems.get(position);
-                // Check if the link is not empty
-                if (!selectedItem.getLink().isEmpty()) {
-                    // Open the default browser with the link URL
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(selectedItem.getLink()));
-                    startActivity(browserIntent);
-                } else {
-                    Toast.makeText(MainActivity.this, "No link available", Toast.LENGTH_SHORT).show();
-                }
+        listView.setOnItemClickListener((parent, view, position, id) -> {
+            NewsItem selectedItem = newsItems.get(position);
+            // Check if the link is not empty
+            if (!selectedItem.getLink().isEmpty()) {
+                // Open the default browser with the link URL
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(selectedItem.getLink()));
+                startActivity(browserIntent);
+            } else {
+                Toast.makeText(MainActivity.this, "No link available", Toast.LENGTH_SHORT).show();
             }
         });
 
