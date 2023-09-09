@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -121,15 +120,18 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            // KOB
+            // KOB TODO: Fix
             if (tappedImageId == R.id.kob_img) {
                 newsItems.add(new NewsItem("KOB: ", "http://www.kob.com"));
                 try {
                     Document kobDoc = Jsoup.connect("http://www.kob.com").get();
-
-                    Elements kobElements = kobDoc.select("h6");
-//                kobElements = kobDoc.select("h4");
-
+                    Elements kobElements = kobDoc.select("h4");
+                    for (Element element : kobElements) {
+                        String title = element.text().trim();
+                        String link = element.select("a").attr("href");
+                        newsItems.add(new NewsItem(title, link));
+                    }
+                    kobElements = kobDoc.select("h6");
                     for (Element element : kobElements) {
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
