@@ -1,4 +1,8 @@
 # CHANGELOG.md AbqHeadlines
+
+- v1.3.1
+  - Added slide transition
+
 - v1.3
   - Added front page and separated sites
   - Code cleanup lambda
