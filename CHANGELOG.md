@@ -1,5 +1,8 @@
 # CHANGELOG.md AbqHeadlines
 
+- v1.4
+  - Added Abqjournal
+
 - v1.3.1
   - Added slide transition
 

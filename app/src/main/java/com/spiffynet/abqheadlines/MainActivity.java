@@ -141,6 +141,23 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
+            // Alb Journal
+            if (tappedImageId == R.id.albj_img) {
+                newsItems.add(new NewsItem("Albuquerque Journal: ", "http://www.abqjournal.com/"));
+                try {
+                    Document kobDoc = Jsoup.connect("http://www.abqjournal.com/").get();
+                    Elements kobElements = kobDoc.select("h3");
+                    String url = "http://www.abqjournal.com";
+                    for (Element element : kobElements) {
+                        String title = element.text().trim();
+                        String link = element.select("a").attr("href");
+                        // links need url added
+                        newsItems.add(new NewsItem(title, url + link));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
 
             return null;
         }

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".FrontPage">
 
-    <!-- ImageButton 1 -->
+
     <TextView
         android:id="@+id/front_text"
         android:layout_width="276dp"
@@ -25,9 +25,10 @@
         android:layout_marginTop="100dp"
         android:backgroundTint="#2630D4"
         android:onClick="onImageButtonClick"
-        android:src="@mipmap/krqe" />
+        android:src="@mipmap/krqe"
+        android:contentDescription="@string/images_desc"/>
 
-    <!-- ImageButton 2 -->
+
     <ImageButton
         android:id="@+id/koat_img"
         android:layout_width="141dp"
@@ -37,9 +38,9 @@
         android:layout_marginTop="20dp"
         android:backgroundTint="#2630D4"
         android:onClick="onImageButtonClick"
-        android:src="@mipmap/koat" />
+        android:src="@mipmap/koat"
+        android:contentDescription="@string/images_desc"/>
 
-    <!-- ImageButton 3 -->
     <ImageButton
         android:id="@+id/kob_img"
         android:layout_width="141dp"
@@ -49,6 +50,19 @@
         android:layout_marginTop="20dp"
         android:backgroundTint="#000000"
         android:onClick="onImageButtonClick"
-        android:src="@mipmap/kob" />
+        android:src="@mipmap/kob"
+        android:contentDescription="@string/images_desc"/>
+
+    <ImageButton
+        android:id="@+id/albj_img"
+        android:layout_width="141dp"
+        android:layout_height="143dp"
+        android:layout_below="@id/kob_img"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#000000"
+        android:onClick="onImageButtonClick"
+        android:src="@mipmap/albj"
+        android:contentDescription="@string/images_desc"/>
 
 </RelativeLayout>
