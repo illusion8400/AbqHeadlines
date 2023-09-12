@@ -15,8 +15,8 @@ public class FrontPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Slide transition
-        getWindow().setEnterTransition(new Slide());
         getWindow().setExitTransition(new Slide());
+        getWindow().setReenterTransition(new Slide());
         setContentView(R.layout.front_page_layout);
     }
 
