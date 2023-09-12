@@ -26,6 +26,7 @@ import java.util.List;
 
 
 
+/** @noinspection deprecation*/
 public class MainActivity extends AppCompatActivity {
 
     private ListView listView;
@@ -61,11 +62,11 @@ public class MainActivity extends AppCompatActivity {
             new FetchNewsTask().execute();
             finish();
             startActivity(getIntent());
-            Toast.makeText(MainActivity.this, "Refresh", Toast.LENGTH_SHORT).show();
         });
 
         // Start the web scraping task
         new FetchNewsTask().execute();
+        Toast.makeText(MainActivity.this, "Loading", Toast.LENGTH_SHORT).show();
 
         // Set a click listener for the ListView items
         listView.setOnItemClickListener((parent, view, position, id) -> {
@@ -83,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class FetchNewsTask extends AsyncTask<Void, Void, Void> {
-
         @Override
         protected Void doInBackground(Void... voids) {
             // get chosen site
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private class NewsItem {
+    private static class NewsItem {
         private final String title;
         private final String link;
 

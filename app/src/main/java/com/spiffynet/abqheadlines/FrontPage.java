@@ -14,14 +14,16 @@ public class FrontPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Slide transition
+        getWindow().setEnterTransition(new Slide());
+        getWindow().setExitTransition(new Slide());
         setContentView(R.layout.front_page_layout);
     }
 
     // Handle ImageButton clicks
     public void onImageButtonClick(View view) {
         Intent intent = new Intent(this, MainActivity.class);
-        // Slide transition
-        getWindow().setExitTransition(new Slide());
+
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(this);
         // setup send tappedImageID to MainActivity through intent
         int tappedImageId = view.getId();

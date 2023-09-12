@@ -1,5 +1,10 @@
 # CHANGELOG.md AbqHeadlines
 
+- v1.4.1
+  - Added new font
+  - Added loading toast after front_page
+    - Removed refresh toast
+
 - v1.4
   - Added Abqjournal
 
