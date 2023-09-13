@@ -1,5 +1,9 @@
 # CHANGELOG.md AbqHeadlines
 
+- v1.5
+  - Fixed kob links
+  - Added some colors
+
 - v1.4.1
   - Added new font
   - Added loading toast after front_page
