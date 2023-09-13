@@ -10,7 +10,7 @@ android {
         applicationId = "com.spiffynet.abqheadlines"
         minSdk = 26
         targetSdk = 33
-        versionName = "1.4.1"
+        versionName = "1.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         versionCode = 1
