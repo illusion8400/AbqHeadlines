@@ -190,18 +190,16 @@ public class MainActivity extends AppCompatActivity {
                         titleTextView.setText(newsItem.getTitle());
                         linkTextView.setText(newsItem.getLink());
                     }
-                    if (titleTextView.getText().toString().toLowerCase().contains("krqe")) {
+                    // Add Colors
+                    if (titleTextView.getText().toString().contains("KRQE")) {
                         titleTextView.setTextColor(getResources().getColor(R.color.blue));
                         linkTextView.setTextColor(getResources().getColor(R.color.blue));
-                    } else if (titleTextView.getText().toString().toLowerCase().contains("koat")) {
+                    } else if (titleTextView.getText().toString().contains("KOAT")) {
                         titleTextView.setTextColor(getResources().getColor(R.color.blue));
                         linkTextView.setTextColor(getResources().getColor(R.color.blue));
-                    } else if (titleTextView.getText().toString().toLowerCase().contains("kob")) {
+                    } else if (titleTextView.getText().toString().contains("KOB")) {
                         titleTextView.setTextColor(getResources().getColor(R.color.red));
                         linkTextView.setTextColor(getResources().getColor(R.color.red));
-                    } else if (titleTextView.getText().toString().toLowerCase().contains("journal")) {
-                        titleTextView.setTextColor(getResources().getColor(R.color.text_color_light_or_dark));
-                        linkTextView.setTextColor(getResources().getColor(R.color.text_color_light_or_dark));
                     }
                     return view;
                 }
