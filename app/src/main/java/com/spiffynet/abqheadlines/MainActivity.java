@@ -120,18 +120,24 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            // KOB TODO: Fix
+            // KOB
             if (tappedImageId == R.id.kob_img) {
                 newsItems.add(new NewsItem("KOB: ", "http://www.kob.com"));
                 try {
                     Document kobDoc = Jsoup.connect("http://www.kob.com").get();
-                    Elements kobElements = kobDoc.select("h4");
+                    Elements kobElements = kobDoc.select("div.col-12.col-md-9.col-lg-8.col-xl-8.pb-2");
                     for (Element element : kobElements) {
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
                         newsItems.add(new NewsItem(title, link));
                     }
-                    kobElements = kobDoc.select("h6");
+                    kobElements = kobDoc.select("div.col-12.col-sm-6.col-md-12.pb-2");
+                    for (Element element : kobElements) {
+                        String title = element.text().trim();
+                        String link = element.select("a").attr("href");
+                        newsItems.add(new NewsItem(title, link));
+                    }
+                    kobElements = kobDoc.select("div.col-8");
                     for (Element element : kobElements) {
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
