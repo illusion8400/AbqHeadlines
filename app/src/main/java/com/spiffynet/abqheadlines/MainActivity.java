@@ -1,5 +1,6 @@
 package com.spiffynet.abqheadlines;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class FetchNewsTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
@@ -194,12 +196,16 @@ public class MainActivity extends AppCompatActivity {
                     if (titleTextView.getText().toString().contains("KRQE")) {
                         titleTextView.setTextColor(getResources().getColor(R.color.blue));
                         linkTextView.setTextColor(getResources().getColor(R.color.blue));
-                    } else if (titleTextView.getText().toString().contains("KOAT")) {
+                    }  else if (titleTextView.getText().toString().contains("KOAT")) {
                         titleTextView.setTextColor(getResources().getColor(R.color.blue));
                         linkTextView.setTextColor(getResources().getColor(R.color.blue));
                     } else if (titleTextView.getText().toString().contains("KOB")) {
                         titleTextView.setTextColor(getResources().getColor(R.color.red));
                         linkTextView.setTextColor(getResources().getColor(R.color.red));
+                    } else {
+                        // default if not found
+                        titleTextView.setTextColor(getResources().getColor(R.color.text_color_light_or_dark));
+                        linkTextView.setTextColor(getResources().getColor(R.color.grey));
                     }
                     return view;
                 }
