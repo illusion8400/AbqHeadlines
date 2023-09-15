@@ -111,9 +111,19 @@ public class MainActivity extends AppCompatActivity {
                 newsItems.add(new NewsItem("KOAT: ", "http://www.koat.com"));
                 try {
                     Document koatDoc = Jsoup.connect("http://www.koat.com").get();
-                    Elements koatElements = koatDoc.select("h2");
 
+                    Elements koatElements = koatDoc.select("h2");
                     for (Element element : koatElements) {
+                        String title = element.text().trim();
+                        String link = element.select("a").attr("href");
+                        newsItems.add(new NewsItem(title, "http://www.koat.com" + link));
+                    }
+                    koatElements = koatDoc.select("body > div.site-content > main > div.listing-page > div > div.grid-content.listbox > div.grid-content-inner > ul > li > a");
+                    for (Element element : koatElements) {
+                        String ele1 = String.valueOf(element);
+                        if (ele1.contains("No data available") || ele1.contains("Advertisement") || ele1.contains("Sponsored") || ele1.contains("Promotions")) {
+                            continue;
+                        }
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
                         newsItems.add(new NewsItem(title, "http://www.koat.com" + link));
