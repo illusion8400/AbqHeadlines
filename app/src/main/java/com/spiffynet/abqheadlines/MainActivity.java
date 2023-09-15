@@ -92,9 +92,9 @@ public class MainActivity extends AppCompatActivity {
             int tappedImageId = getIntent().getIntExtra("tapped_image_id", -1);
             // KRQE
             if (tappedImageId == R.id.krqe_img) {
-                newsItems.add(new NewsItem("KRQE: ", "http://www.krqe.com"));
+                newsItems.add(new NewsItem("KRQE: ", "https://www.krqe.com"));
                 try {
-                    Document krqeDoc = Jsoup.connect("http://www.krqe.com").get();
+                    Document krqeDoc = Jsoup.connect("https://www.krqe.com").get();
                     Elements krqeElements = krqeDoc.select("h3.article-list__article-title");
 
                     for (Element element : krqeElements) {
@@ -108,25 +108,29 @@ public class MainActivity extends AppCompatActivity {
             }
             // KOAT
             if (tappedImageId == R.id.koat_img) {
-                newsItems.add(new NewsItem("KOAT: ", "http://www.koat.com"));
+                newsItems.add(new NewsItem("KOAT: ", "https://www.koat.com"));
                 try {
-                    Document koatDoc = Jsoup.connect("http://www.koat.com").get();
+                    Document koatDoc = Jsoup.connect("https://www.koat.com").get();
 
                     Elements koatElements = koatDoc.select("h2");
                     for (Element element : koatElements) {
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
-                        newsItems.add(new NewsItem(title, "http://www.koat.com" + link));
+                        newsItems.add(new NewsItem(title, "https://www.koat.com" + link));
                     }
-                    koatElements = koatDoc.select("body > div.site-content > main > div.listing-page > div > div.grid-content.listbox > div.grid-content-inner > ul > li > a");
+                    koatElements = koatDoc.select("body > div.site-content > main > " +
+                            "div.listing-page > div > div.grid-content.listbox > div.grid-content-inner > ul > li > a");
                     for (Element element : koatElements) {
                         String ele1 = String.valueOf(element);
-                        if (ele1.contains("No data available") || ele1.contains("Advertisement") || ele1.contains("Sponsored") || ele1.contains("Promotions")) {
+                        if (ele1.contains("No data available")
+                                || ele1.contains("Advertisement")
+                                || ele1.contains("Sponsored")
+                                || ele1.contains("Promotions")) {
                             continue;
                         }
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
-                        newsItems.add(new NewsItem(title, "http://www.koat.com" + link));
+                        newsItems.add(new NewsItem(title, "https://www.koat.com" + link));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -134,9 +138,9 @@ public class MainActivity extends AppCompatActivity {
             }
             // KOB
             if (tappedImageId == R.id.kob_img) {
-                newsItems.add(new NewsItem("KOB: ", "http://www.kob.com"));
+                newsItems.add(new NewsItem("KOB: ", "https://www.kob.com"));
                 try {
-                    Document kobDoc = Jsoup.connect("http://www.kob.com").get();
+                    Document kobDoc = Jsoup.connect("https://www.kob.com").get();
                     Elements kobElements = kobDoc.select("div.col-12.col-md-9.col-lg-8.col-xl-8.pb-2");
                     for (Element element : kobElements) {
                         String title = element.text().trim();
