@@ -1,5 +1,8 @@
 # CHANGELOG.md AbqHeadlines
 
+- v1.5.1
+  - Added more koat links
+
 - v1.5
   - Fixed kob links
   - Added some colors
