@@ -18,9 +18,11 @@ public class FrontPage extends AppCompatActivity {
         // Slide transition
         getWindow().setExitTransition(new Slide());
         getWindow().setReenterTransition(new Slide());
-        // tablet or phone
+        // tablet or phone orientation
         if(getResources().getBoolean(R.bool.portrait_only)){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        } else {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         }
         setContentView(R.layout.front_page_layout);
     }
