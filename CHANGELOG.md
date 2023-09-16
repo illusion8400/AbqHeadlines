@@ -3,7 +3,6 @@
 - v1.5.2 
 - Added large screen rules for tablets to allow landscape mode
   - Screens over 600dp width will allow screen rotation.
-  - TODO: fix; smaller tablets/phones may cut off bottom img
 
 - v1.5.1
   - Added more koat links
