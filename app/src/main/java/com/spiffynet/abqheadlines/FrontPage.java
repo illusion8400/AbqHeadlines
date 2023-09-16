@@ -3,6 +3,7 @@ package com.spiffynet.abqheadlines;
 
 import android.app.ActivityOptions;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.view.View;
@@ -17,6 +18,10 @@ public class FrontPage extends AppCompatActivity {
         // Slide transition
         getWindow().setExitTransition(new Slide());
         getWindow().setReenterTransition(new Slide());
+        // tablet or phone
+        if(getResources().getBoolean(R.bool.portrait_only)){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
         setContentView(R.layout.front_page_layout);
     }
 
