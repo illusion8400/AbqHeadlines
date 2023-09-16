@@ -18,7 +18,7 @@ public class FrontPage extends AppCompatActivity {
         // Slide transition
         getWindow().setExitTransition(new Slide());
         getWindow().setReenterTransition(new Slide());
-        // tablet or phone
+        // tablet or phone TODO: fix; smaller tablets/phones may cut off bottom img
         if(getResources().getBoolean(R.bool.portrait_only)){
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
