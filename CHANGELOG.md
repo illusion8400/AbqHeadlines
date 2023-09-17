@@ -1,8 +1,12 @@
 # CHANGELOG.md AbqHeadlines
 
+- v1.5.3
+  - Added copy link on long press
+  - Fix reload on rotation for large screens
+
 - v1.5.2 
-- Added large screen rules for tablets to allow landscape mode
-  - Screens over 600dp width will allow screen rotation.
+  - Added large screen rules for tablets to allow landscape mode
+    - Screens over 600dp width will allow screen rotation.
 
 - v1.5.1
   - Added more koat links
