@@ -1,6 +1,8 @@
 # CHANGELOG.md AbqHeadlines
 
 - v1.5.4
+- Added logo
+- Added separate no toast(popups) release. Better for WSA
 - Code cleanup:
   - Removed duplicate click listener
   - Removed duplicate execute on refresh
