@@ -1,6 +1,6 @@
 # CHANGELOG.md AbqHeadlines
 
-- v:Next
+- v1.5.4
 - Code cleanup:
   - Removed duplicate click listener
   - Removed duplicate execute on refresh
