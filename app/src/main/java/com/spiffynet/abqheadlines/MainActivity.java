@@ -1,6 +1,9 @@
 package com.spiffynet.abqheadlines;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -16,10 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,7 +86,22 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "No link available", Toast.LENGTH_SHORT).show();
             }
         });
-
+        listView.setOnItemLongClickListener((parent, view, position, id) -> {
+            NewsItem selectedItem = newsItems.get(position);
+            // Check if the link is not empty
+            if (!selectedItem.getLink().isEmpty()) {
+                String textToCopy = String.valueOf(Uri.parse(selectedItem.getLink()));
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                // Create a ClipData object to store the text
+                ClipData clipData = ClipData.newPlainText("text", textToCopy);
+                // Set the data to clipboard
+                clipboardManager.setPrimaryClip(clipData);
+                Toast.makeText(MainActivity.this, textToCopy + "\nCopied to clipboard", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(MainActivity.this, "No link available", Toast.LENGTH_SHORT).show();
+            }
+            return true;
+        });
     }
 
     @SuppressLint("StaticFieldLeak")
