@@ -30,8 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
-
 /** @noinspection deprecation*/
 public class MainActivity extends AppCompatActivity {
 
@@ -44,23 +42,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         listView = findViewById(R.id.listView);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-
-        // Set a click listener for the ListView items
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            NewsItem selectedItem = newsItems.get(position);
-
-            // Check if the link is not empty
-            if (!selectedItem.getLink().isEmpty()) {
-                // Open the default browser with the link URL
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(selectedItem.getLink()));
-                startActivity(browserIntent);
-            } else {
-                Toast.makeText(MainActivity.this, "No link available", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         // Set up SwipeRefreshLayout for refreshing
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -86,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "No link available", Toast.LENGTH_SHORT).show();
             }
         });
+        // Set a long click listener
         listView.setOnItemLongClickListener((parent, view, position, id) -> {
             NewsItem selectedItem = newsItems.get(position);
             // Check if the link is not empty
@@ -200,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
             return null;
         }
 
@@ -215,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                     View view = super.getView(position, convertView, parent);
-
 
                     TextView titleTextView = view.findViewById(R.id.item_title);
                     TextView linkTextView = view.findViewById(R.id.item_link);
