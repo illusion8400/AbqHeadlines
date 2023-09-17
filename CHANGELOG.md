@@ -1,5 +1,10 @@
 # CHANGELOG.md AbqHeadlines
 
+- v:Next
+- Code cleanup:
+  - Removed duplicate click listener
+  - Removed duplicate execute on refresh
+
 - v1.5.3
   - Added copy link on long press
   - Fix reload on rotation for large screens

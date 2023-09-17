@@ -47,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Set up SwipeRefreshLayout for refreshing
         swipeRefreshLayout.setOnRefreshListener(() -> {
-
-            new FetchNewsTask().execute();
             finish();
             startActivity(getIntent());
         });
