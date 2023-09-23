@@ -1,11 +1,15 @@
 # CHANGELOG.md AbqHeadlines
 
+- v1.6
+  - Added new source
+  - Added scroll
+
 - v1.5.4
-- Added logo
-- Added separate no toast(popups) release. Better for WSA
-- Code cleanup:
-  - Removed duplicate click listener
-  - Removed duplicate execute on refresh
+  - Added logo
+  - Added separate no toast(popups) release. Better for WSA
+  - Code cleanup:
+    - Removed duplicate click listener
+    - Removed duplicate execute on refresh
 
 - v1.5.3
   - Added copy link on long press
