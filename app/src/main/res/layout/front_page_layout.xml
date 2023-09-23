@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+<RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".FrontPage">
 
 
@@ -66,4 +68,17 @@
         android:src="@mipmap/albj"
         android:contentDescription="@string/images_desc"/>
 
+    <ImageButton
+        android:id="@+id/sfnm_img"
+        android:layout_width="141dp"
+        android:layout_height="143dp"
+        android:layout_below="@id/albj_img"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="#000000"
+        android:contentDescription="@string/images_desc"
+        android:onClick="onImageButtonClick"
+        android:src="@mipmap/sfnm_img" />
+
 </RelativeLayout>
+</ScrollView>

@@ -167,12 +167,30 @@ public class MainActivity extends AppCompatActivity {
             }
             // Alb Journal
             if (tappedImageId == R.id.albj_img) {
-                newsItems.add(new NewsItem("Albuquerque Journal: ", "http://www.abqjournal.com/"));
+                newsItems.add(new NewsItem("Albuquerque Journal: ", "https://www.abqjournal.com/"));
                 try {
-                    Document kobDoc = Jsoup.connect("http://www.abqjournal.com/").get();
-                    Elements kobElements = kobDoc.select("h3");
-                    String url = "http://www.abqjournal.com";
-                    for (Element element : kobElements) {
+                    Document albjDoc = Jsoup.connect("https://www.abqjournal.com/").get();
+                    Elements albjElements = albjDoc.select("h3");
+                    String url = "https://www.abqjournal.com";
+                    for (Element element : albjElements) {
+                        String title = element.text().trim();
+                        String link = element.select("a").attr("href");
+                        // links need url added
+                        newsItems.add(new NewsItem(title, url + link));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            // Sante Fe New Mexican
+            if (tappedImageId == R.id.sfnm_img) {
+                newsItems.add(new NewsItem("Santa Fe New Mexican: ", "https://www.santafenewmexican.com/"));
+                try {
+                    Document sfnmDoc = Jsoup.connect("https://www.santafenewmexican.com/").get();
+//                    Elements sfnmElements = sfnmDoc.select("div.card-container > div.card-body > div.card-headline > h3");
+                    Elements sfnmElements = sfnmDoc.select("div.card-container > div.card-body > div.card-headline");
+                    String url = "https://www.santafenewmexican.com";
+                    for (Element element : sfnmElements) {
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
                         // links need url added
