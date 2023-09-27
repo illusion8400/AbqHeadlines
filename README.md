@@ -1,11 +1,13 @@
 # AbqHeadlines 
 Albuquerque Headlines
 
-Simple Android app to show local news links. Links will open default browser.
-Must allow install from unknown apps.
+Now available on the Google Play Store!
+https://play.google.com/store/apps/details?id=com.spiffynet.abqheadlines
 
-- v1.6
+Simple Android app to show local news links. Links will open default browser.
+
+- v1.7
   - Added new source
-  - Added scroll
+  - Rearranged front page layout
 
 ![Alt text](/Screenshot1.png "Screenshot1")
