@@ -4,81 +4,93 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 <RelativeLayout
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    tools:context=".FrontPage">
-
+    tools:context=".FrontPage"
+    android:layout_gravity="center"
+    android:layout_marginTop="0dp">
 
     <TextView
         android:id="@+id/front_text"
         android:layout_width="276dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
         android:gravity="center"
         android:text="@string/app_name"
         android:textSize="25sp"
         android:fontFamily="@font/pmarker"/>
-
+<!--    // krqe-->
     <ImageButton
         android:id="@+id/krqe_img"
         android:layout_width="143dp"
         android:layout_height="144dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="75dp"
         android:backgroundTint="#2630D4"
+        android:contentDescription="@string/images_desc"
         android:onClick="onImageButtonClick"
         android:src="@mipmap/krqe"
-        android:contentDescription="@string/images_desc"/>
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
-
+<!--    // koat-->
     <ImageButton
         android:id="@+id/koat_img"
         android:layout_width="141dp"
         android:layout_height="143dp"
-        android:layout_below="@id/krqe_img"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_toEndOf="@id/krqe_img"
+        android:layout_marginTop="75dp"
+        android:layout_marginStart="20dp"
         android:backgroundTint="#2630D4"
+        android:contentDescription="@string/images_desc"
         android:onClick="onImageButtonClick"
-        android:src="@mipmap/koat"
-        android:contentDescription="@string/images_desc"/>
-
+        android:src="@mipmap/koat" />
+<!--    // kob-->
     <ImageButton
         android:id="@+id/kob_img"
         android:layout_width="141dp"
         android:layout_height="143dp"
         android:layout_below="@id/koat_img"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:backgroundTint="#000000"
         android:onClick="onImageButtonClick"
         android:src="@mipmap/kob"
         android:contentDescription="@string/images_desc"/>
-
+<!--    // albj-->
     <ImageButton
         android:id="@+id/albj_img"
         android:layout_width="141dp"
         android:layout_height="143dp"
-        android:layout_below="@id/kob_img"
-        android:layout_centerHorizontal="true"
+        android:layout_toEndOf="@+id/kob_img"
+        android:layout_below="@id/koat_img"
         android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
         android:backgroundTint="#000000"
         android:onClick="onImageButtonClick"
         android:src="@mipmap/albj"
         android:contentDescription="@string/images_desc"/>
-
+<!--    // sfnm-->
     <ImageButton
         android:id="@+id/sfnm_img"
         android:layout_width="141dp"
         android:layout_height="143dp"
         android:layout_below="@id/albj_img"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:backgroundTint="#000000"
         android:contentDescription="@string/images_desc"
         android:onClick="onImageButtonClick"
         android:src="@mipmap/sfnm_img" />
+<!--    //sourcenm-->
+    <ImageButton
+        android:id="@+id/sourcenm_img"
+        android:layout_width="141dp"
+        android:layout_height="143dp"
+        android:layout_below="@id/albj_img"
+        android:layout_toEndOf="@+id/sfnm_img"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:backgroundTint="#000000"
+        android:contentDescription="@string/images_desc"
+        android:onClick="onImageButtonClick"
+        android:src="@mipmap/sourcenm" />
 
 </RelativeLayout>
 </ScrollView>

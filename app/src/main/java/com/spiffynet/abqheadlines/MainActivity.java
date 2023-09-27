@@ -187,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
                 newsItems.add(new NewsItem("Santa Fe New Mexican: ", "https://www.santafenewmexican.com/"));
                 try {
                     Document sfnmDoc = Jsoup.connect("https://www.santafenewmexican.com/").get();
-//                    Elements sfnmElements = sfnmDoc.select("div.card-container > div.card-body > div.card-headline > h3");
                     Elements sfnmElements = sfnmDoc.select("div.card-container > div.card-body > div.card-headline");
                     String url = "https://www.santafenewmexican.com";
                     for (Element element : sfnmElements) {
@@ -195,6 +194,37 @@ public class MainActivity extends AppCompatActivity {
                         String link = element.select("a").attr("href");
                         // links need url added
                         newsItems.add(new NewsItem(title, url + link));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            // SourceNM
+            if (tappedImageId == R.id.sourcenm_img) {
+                newsItems.add(new NewsItem("SourceNM: ", "https://sourcenm.com/"));
+                try {
+                    Document sourcenmDoc = Jsoup.connect("https://sourcenm.com/").get();
+                    Elements sourcenmElements = sourcenmDoc.select("h3");
+                    for (Element element : sourcenmElements) {
+                        String ele1 = String.valueOf(element);
+                        if (ele1.contains("Crisis on the Rio Grande")
+                                || ele1.contains("Fuente")) {
+                            continue;
+                        }
+                        String title = element.text().trim();
+                        String link = element.select("a").attr("href");
+                        // links need url added
+                        newsItems.add(new NewsItem(title, link));
+                    }
+                    sourcenmElements = sourcenmDoc.select("h4");
+                    for (Element element : sourcenmElements) {
+                        String title = element.text().trim();
+                        String link = element.select("a").attr("href");
+                        // links need url added
+                        if (title.contains("ABOUT US")) {
+                            continue;
+                        }
+                        newsItems.add(new NewsItem(title, link));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();

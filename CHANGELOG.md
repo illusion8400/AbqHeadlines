@@ -1,5 +1,9 @@
 # CHANGELOG.md AbqHeadlines
 
+- v1.7
+  - Added new source
+  - Rearranged front page layout
+
 - v1.6
   - Added new source
   - Added scroll
