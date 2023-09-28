@@ -220,12 +220,12 @@ public class MainActivity extends AppCompatActivity {
                         newsItems.add(new NewsItem(title, link));
                     }
                     sourcenmElements = sourcenmDoc.select("h4");
+                    String url = "https://sourcenm.com/subscribe/";
                     for (Element element : sourcenmElements) {
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
-                        // links need url added
                         if (title.contains("ABOUT US")) {
-                            continue;
+                            link = url;
                         }
                         newsItems.add(new NewsItem(title, link));
                     }
