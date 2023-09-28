@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -88,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
     @SuppressLint("StaticFieldLeak")
     private class FetchNewsTask extends AsyncTask<Void, Void, Void> {
+        private static final String TAG = "FetchNewsTask";
+
         @Override
         protected Void doInBackground(Void... voids) {
             // get chosen site
@@ -105,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         newsItems.add(new NewsItem(title, link));
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "krqe error", e);
                 }
             }
             // KOAT
@@ -135,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                         newsItems.add(new NewsItem(title, "https://www.koat.com" + link));
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "koat error", e);
                 }
             }
             // KOB
@@ -162,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
                         newsItems.add(new NewsItem(title, link));
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "kob error", e);
                 }
             }
             // Alb Journal
@@ -179,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                         newsItems.add(new NewsItem(title, url + link));
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "abqj error", e);
                 }
             }
             // Sante Fe New Mexican
@@ -196,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
                         newsItems.add(new NewsItem(title, url + link));
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "sfnm error", e);
                 }
             }
             // SourceNM
@@ -227,7 +230,7 @@ public class MainActivity extends AppCompatActivity {
                         newsItems.add(new NewsItem(title, link));
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.e(TAG, "sourcenm error", e);
                 }
             }
             return null;
