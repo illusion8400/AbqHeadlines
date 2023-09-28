@@ -119,6 +119,16 @@ public class MainActivity extends AppCompatActivity {
 
                     Elements koatElements = koatDoc.select("h2");
                     for (Element element : koatElements) {
+                        String ele1 = String.valueOf(element);
+                        if (ele1.contains("No data available")
+                                || ele1.contains("Advertisement")
+                                || ele1.contains("Sponsored")
+                                || ele1.contains("Promotions")
+                                || ele1.contains("Top Picks")
+                                || ele1.contains("Good Housekeeping")
+                                || ele1.contains("DISH subscribers")) {
+                            continue;
+                        }
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
                         newsItems.add(new NewsItem(title, "https://www.koat.com" + link));
@@ -130,7 +140,10 @@ public class MainActivity extends AppCompatActivity {
                         if (ele1.contains("No data available")
                                 || ele1.contains("Advertisement")
                                 || ele1.contains("Sponsored")
-                                || ele1.contains("Promotions")) {
+                                || ele1.contains("Promotions")
+                                || ele1.contains("Top Picks")
+                                || ele1.contains("Good Housekeeping")
+                                || ele1.contains("DISH subscribers")) {
                             continue;
                         }
                         String title = element.text().trim();
@@ -229,6 +242,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                         newsItems.add(new NewsItem(title, link));
                     }
+                    String url2 = "https://sourcenm.com/donate/";
+                    newsItems.add(new NewsItem("Donate", url2));
                 } catch (IOException e) {
                     Log.e(TAG, "sourcenm error", e);
                 }
