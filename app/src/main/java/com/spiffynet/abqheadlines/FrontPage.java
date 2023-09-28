@@ -1,17 +1,22 @@
 package com.spiffynet.abqheadlines;
 
 
+import android.annotation.SuppressLint;
 import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class FrontPage extends AppCompatActivity {
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,8 +30,12 @@ public class FrontPage extends AppCompatActivity {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
         }
         setContentView(R.layout.front_page_layout);
-
-        // Search box
+        // animate front_text
+        Animation a = AnimationUtils.loadAnimation(this, R.anim.scale);
+        a.reset();
+        TextView tv = (TextView) findViewById(R.id.front_text);
+        tv.clearAnimation();
+        tv.startAnimation(a);
 
     }
 
