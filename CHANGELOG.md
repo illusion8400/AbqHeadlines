@@ -1,5 +1,11 @@
 # CHANGELOG.md AbqHeadlines
 
+- v1.7.1
+  - Added Animation for frontpage
+  - Added subscribe and donate links to sourcenm
+  - Misc code/links cleanup
+    - Replaced error handling with android log
+
 - v1.7
   - Added new source
   - Rearranged front page layout

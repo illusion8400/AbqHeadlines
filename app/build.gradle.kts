@@ -14,10 +14,10 @@ android {
         applicationId = "com.spiffynet.abqheadlines"
         minSdk = 26
         targetSdk = 33
-        versionName = "1.7"
+        versionName = "1.7.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        versionCode = 2
+        versionCode = 3
     }
 
     buildTypes {
@@ -32,7 +32,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
             isDebuggable = false
         }
     }
