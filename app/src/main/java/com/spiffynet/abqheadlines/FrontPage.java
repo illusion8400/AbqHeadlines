@@ -8,8 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.transition.Slide;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -30,12 +29,10 @@ public class FrontPage extends AppCompatActivity {
         }
         setContentView(R.layout.front_page_layout);
         // animate front_text
-        Animation a = AnimationUtils.loadAnimation(this, R.anim.scale);
-        a.reset();
-        View tv = (View) findViewById(R.id.relLayout);
-//        TextView tv = (TextView) findViewById(R.id.front_text);
-        tv.clearAnimation();
-        tv.startAnimation(a);
+        RotateAnimation anim = new RotateAnimation(0f, 360f);
+        anim.setDuration(1000);
+        View tv1= findViewById(R.id.relLayout);
+        tv1.startAnimation(anim);
 
     }
 
