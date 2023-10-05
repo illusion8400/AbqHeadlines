@@ -8,12 +8,12 @@ android {
         }
     }
     namespace = "com.spiffynet.abqheadlines"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.spiffynet.abqheadlines"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionName = "1.7.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
