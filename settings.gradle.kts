@@ -15,4 +15,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "AbqHeadlines"
 include(":app")
- 
+include(":wearos")
