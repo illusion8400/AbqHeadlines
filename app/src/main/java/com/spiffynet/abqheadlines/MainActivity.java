@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -54,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Start the web scraping task
         new FetchNewsTask().execute();
-        Toast.makeText(MainActivity.this, "Loading", Toast.LENGTH_SHORT).show();
 
         // Set a click listener for the ListView items
         listView.setOnItemClickListener((parent, view, position, id) -> {
@@ -64,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
                 // Open the default browser with the link URL
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(selectedItem.getLink()));
                 startActivity(browserIntent);
-            } else {
-                Toast.makeText(MainActivity.this, "No link available", Toast.LENGTH_SHORT).show();
             }
         });
         // Set a long click listener
@@ -79,9 +75,6 @@ public class MainActivity extends AppCompatActivity {
                 ClipData clipData = ClipData.newPlainText("text", textToCopy);
                 // Set the data to clipboard
                 clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(MainActivity.this, textToCopy + "\nCopied to clipboard", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(MainActivity.this, "No link available", Toast.LENGTH_SHORT).show();
             }
             return true;
         });
