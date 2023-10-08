@@ -18,6 +18,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
@@ -35,15 +36,18 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
-import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextIndent
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,6 +66,7 @@ class MainActivity : ComponentActivity() {
 
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WearApp() {
     val launcher =
@@ -90,16 +95,25 @@ fun WearApp() {
                         .focusRequester(focusRequester)
                         .focusable()) {
                     Text(
-                        "\n\n               ABQHeadlines",
-                        textAlign = TextAlign.Center
+                        "\n               ABQHeadlines\n"
                     )
                     Divider(color = Color.Red, thickness = 3.dp)
+                    Text("")
+                    // sort items
                     for (item in results) {
                         val title = item["title"] ?: ""
                         val link = item["link"] ?: ""
-
+                        // indent and center
+                        val indentedTitle = buildAnnotatedString {
+                            withStyle(
+                                style = ParagraphStyle(textIndent = TextIndent(firstLine = 5.sp),
+                                    textAlign = TextAlign.Center)
+                            ) {
+                                append(title)
+                            }
+                        }
                         ClickableText(
-                            text = AnnotatedString(title),
+                            text = indentedTitle,
                             onClick = {
                                 // Open the link when the title is clicked
                                 openLinkInBrowser(link, launcher)
