@@ -20,7 +20,7 @@ class NewsActivity : ComponentActivity() {
                 krqeDoc.select("h3.article-list__article-title")
             for (element in krqeTitles) {
                 val title = element.text().trim()
-                val link = krqeUrl + element.select("a").attr("href")
+                val link = element.select("a").attr("href")
                 val result = HashMap<String, String>()
                 result["title"] = title
                 result["link"] = link
