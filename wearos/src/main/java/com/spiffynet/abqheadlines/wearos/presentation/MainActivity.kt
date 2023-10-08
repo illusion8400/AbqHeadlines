@@ -18,7 +18,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
@@ -64,9 +63,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun WearApp() {
     val launcher =
@@ -121,8 +117,15 @@ fun WearApp() {
                             style = TextStyle(color = MaterialTheme.colors.primary),
                             modifier = Modifier.fillMaxWidth()
                         )
-
-                        Divider(color = Color.Blue, thickness = 1.dp)
+                        if (link.contains("krqe")) {
+                            Divider(color = Color.Blue, thickness = 1.dp)
+                        } else if(link.contains("koat")) {
+                            Divider(color = Color.Green, thickness = 1.dp)
+                        } else if (link.contains("kob")) {
+                            Divider(color = Color.Red, thickness = 1.dp)
+                        } else {
+                            Divider(color = Color.Magenta, thickness = 1.dp)
+                        }
                     }
                 }
             }

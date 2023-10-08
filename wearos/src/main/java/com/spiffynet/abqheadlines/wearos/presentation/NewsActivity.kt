@@ -46,7 +46,22 @@ class NewsActivity : ComponentActivity() {
         } catch (e: IOException) {
             Log.e(TAG, "Error fetching KOAT news", e)
         }
-
+        // KOB
+        val kobUrl = "http://www.kob.com"
+        try {
+            val kobDoc: Document = Jsoup.connect(kobUrl).get()
+            val kobTitles: List<Element> = kobDoc.select("div.col-8")
+            for (element in kobTitles) {
+                val title = element.text().trim()
+                val link = element.select("a").attr("href")
+                val result = HashMap<String, String>()
+                result["title"] = title
+                result["link"] = link
+                results.add(result)
+            }
+        } catch (e: IOException) {
+            Log.e(TAG, "Error fetching KOB news", e)
+        }
         return results
     }
 }
