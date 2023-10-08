@@ -11,7 +11,7 @@ android {
         applicationId = "com.spiffynet.abqheadlines"
         minSdk = 26
         targetSdk = 34
-        versionCode = 3
+        versionCode = 4
         versionName = "1.0"
         vectorDrawables {
             useSupportLibrary = true
