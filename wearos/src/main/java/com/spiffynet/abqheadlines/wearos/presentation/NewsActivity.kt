@@ -34,7 +34,8 @@ class NewsActivity : ComponentActivity() {
         val koatUrl = "http://www.koat.com"
         try {
             val koatDoc: Document = Jsoup.connect(koatUrl).get()
-            val koatTitles: List<Element> = koatDoc.select("h2")
+            val koatTitles: List<Element> = koatDoc.select("h2, body > div.site-content > main > " +
+                    "div.listing-page > div > div.grid-content.listbox > div.grid-content-inner > ul > li > a")
             for (element in koatTitles) {
                 val title = element.text().trim()
                 val link = koatUrl + element.select("a").attr("href")
@@ -50,7 +51,8 @@ class NewsActivity : ComponentActivity() {
         val kobUrl = "http://www.kob.com"
         try {
             val kobDoc: Document = Jsoup.connect(kobUrl).get()
-            val kobTitles: List<Element> = kobDoc.select("div.col-8")
+            val kobTitles: List<Element> = kobDoc.select("div.col-12.col-md-9.col-lg-8.col-xl-8.pb-2,div.col-8," +
+                    "div.col-12.col-sm-6.col-md-12.pb-2")
             for (element in kobTitles) {
                 val title = element.text().trim()
                 val link = element.select("a").attr("href")
