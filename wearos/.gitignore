@@ -1,3 +1,4 @@
 /build
 /release/output-metadata.json
 /release/wearos-release.apk
+/release/wearos-release.aab
