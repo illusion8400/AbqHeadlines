@@ -13,6 +13,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -140,7 +141,8 @@ fun WearApp() {
         try {
             launcher.launch(intent)
         } catch (e: ActivityNotFoundException) {
-            // Handle the case where a browser app is not installed
+            // FIXME: Send link to phone or copy link with no browser
+            Log.e("NoBrowser", "browser error", e)
         }
     }
 

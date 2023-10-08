@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "krqe error", e);
                 }
             }
-            // KOAT
+            // KOAT TODO: Combine selection of tags
             if (tappedImageId == R.id.koat_img) {
                 newsItems.add(new NewsItem("KOAT: ", "https://www.koat.com"));
                 try {
@@ -154,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "koat error", e);
                 }
             }
-            // KOB
+            // KOB TODO: Combine selection of tags
             if (tappedImageId == R.id.kob_img) {
                 newsItems.add(new NewsItem("KOB: ", "https://www.kob.com"));
                 try {
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "sfnm error", e);
                 }
             }
-            // SourceNM
+            // SourceNM TODO: Combine selection of tags
             if (tappedImageId == R.id.sourcenm_img) {
                 newsItems.add(new NewsItem("SourceNM: ", "https://sourcenm.com/"));
                 try {
