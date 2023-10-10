@@ -50,6 +50,7 @@ import androidx.wear.compose.material.Text
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
 
@@ -58,12 +59,12 @@ class MainActivity : ComponentActivity() {
         setTheme(android.R.style.Theme_DeviceDefault)
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
+
         setContent {
             WearApp()
         }
     }
 }
-
 @Composable
 fun WearApp() {
     val launcher =
@@ -142,6 +143,7 @@ fun WearApp() {
             launcher.launch(intent)
         } catch (e: ActivityNotFoundException) {
             // FIXME: Send link to phone or copy link with no browser
+
             Log.e("NoBrowser", "browser error", e)
         }
     }
