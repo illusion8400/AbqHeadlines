@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         protected Void doInBackground(Void... voids) {
             // get chosen site
             int tappedImageId = getIntent().getIntExtra("tapped_image_id", -1);
+
             // KRQE
             if (tappedImageId == R.id.krqe_img) {
                 newsItems.add(new NewsItem("KRQE: ", "https://www.krqe.com"));
@@ -111,29 +112,14 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "krqe error", e);
                 }
             }
-            // KOAT TODO: Combine selection of tags
+
+            // KOAT
             if (tappedImageId == R.id.koat_img) {
                 newsItems.add(new NewsItem("KOAT: ", "https://www.koat.com"));
                 try {
                     Document koatDoc = Jsoup.connect("https://www.koat.com").get();
 
-                    Elements koatElements = koatDoc.select("h2");
-                    for (Element element : koatElements) {
-                        String ele1 = String.valueOf(element);
-                        if (ele1.contains("No data available")
-                                || ele1.contains("Advertisement")
-                                || ele1.contains("Sponsored")
-                                || ele1.contains("Promotions")
-                                || ele1.contains("Top Picks")
-                                || ele1.contains("Good Housekeeping")
-                                || ele1.contains("DISH subscribers")) {
-                            continue;
-                        }
-                        String title = element.text().trim();
-                        String link = element.select("a").attr("href");
-                        newsItems.add(new NewsItem(title, "https://www.koat.com" + link));
-                    }
-                    koatElements = koatDoc.select("body > div.site-content > main > " +
+                    Elements koatElements = koatDoc.select("h2,body > div.site-content > main > " +
                             "div.listing-page > div > div.grid-content.listbox > div.grid-content-inner > ul > li > a");
                     for (Element element : koatElements) {
                         String ele1 = String.valueOf(element);
@@ -154,24 +140,15 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "koat error", e);
                 }
             }
-            // KOB TODO: Combine selection of tags
+
+            // KOB
             if (tappedImageId == R.id.kob_img) {
                 newsItems.add(new NewsItem("KOB: ", "https://www.kob.com"));
                 try {
                     Document kobDoc = Jsoup.connect("https://www.kob.com").get();
-                    Elements kobElements = kobDoc.select("div.col-12.col-md-9.col-lg-8.col-xl-8.pb-2");
-                    for (Element element : kobElements) {
-                        String title = element.text().trim();
-                        String link = element.select("a").attr("href");
-                        newsItems.add(new NewsItem(title, link));
-                    }
-                    kobElements = kobDoc.select("div.col-12.col-sm-6.col-md-12.pb-2");
-                    for (Element element : kobElements) {
-                        String title = element.text().trim();
-                        String link = element.select("a").attr("href");
-                        newsItems.add(new NewsItem(title, link));
-                    }
-                    kobElements = kobDoc.select("div.col-8");
+                    Elements kobElements = kobDoc.select("div.col-12.col-md-9.col-lg-8.col-xl-8.pb-2," +
+                            "div.col-12.col-sm-6.col-md-12.pb-2," +
+                            "div.col-8");
                     for (Element element : kobElements) {
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
@@ -181,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "kob error", e);
                 }
             }
+
             // Alb Journal
             if (tappedImageId == R.id.albj_img) {
                 newsItems.add(new NewsItem("Albuquerque Journal: ", "https://www.abqjournal.com/"));
@@ -198,6 +176,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "abqj error", e);
                 }
             }
+
             // Sante Fe New Mexican
             if (tappedImageId == R.id.sfnm_img) {
                 newsItems.add(new NewsItem("Santa Fe New Mexican: ", "https://www.santafenewmexican.com/"));
@@ -215,12 +194,16 @@ public class MainActivity extends AppCompatActivity {
                     Log.e(TAG, "sfnm error", e);
                 }
             }
-            // SourceNM TODO: Combine selection of tags
+
+            // SourceNM
             if (tappedImageId == R.id.sourcenm_img) {
                 newsItems.add(new NewsItem("SourceNM: ", "https://sourcenm.com/"));
                 try {
                     Document sourcenmDoc = Jsoup.connect("https://sourcenm.com/").get();
-                    Elements sourcenmElements = sourcenmDoc.select("h3");
+                    Elements sourcenmElements = sourcenmDoc.select("h3,h4");
+                    String url = "https://sourcenm.com/subscribe/";
+                    String url2 = "https://sourcenm.com/donate/";
+
                     for (Element element : sourcenmElements) {
                         String ele1 = String.valueOf(element);
                         if (ele1.contains("Crisis on the Rio Grande")
@@ -229,20 +212,12 @@ public class MainActivity extends AppCompatActivity {
                         }
                         String title = element.text().trim();
                         String link = element.select("a").attr("href");
-                        // links need url added
-                        newsItems.add(new NewsItem(title, link));
-                    }
-                    sourcenmElements = sourcenmDoc.select("h4");
-                    String url = "https://sourcenm.com/subscribe/";
-                    for (Element element : sourcenmElements) {
-                        String title = element.text().trim();
-                        String link = element.select("a").attr("href");
                         if (title.contains("ABOUT US")) {
                             link = url;
                         }
                         newsItems.add(new NewsItem(title, link));
                     }
-                    String url2 = "https://sourcenm.com/donate/";
+                    // Add donate link
                     newsItems.add(new NewsItem("Donate", url2));
                 } catch (IOException e) {
                     Log.e(TAG, "sourcenm error", e);
