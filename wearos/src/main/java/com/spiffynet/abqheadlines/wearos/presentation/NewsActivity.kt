@@ -37,6 +37,17 @@ class NewsActivity : ComponentActivity() {
             val koatTitles: List<Element> = koatDoc.select("h2, body > div.site-content > main > " +
                     "div.listing-page > div > div.grid-content.listbox > div.grid-content-inner > ul > li > a")
             for (element in koatTitles) {
+                val ele1 = element.toString()
+                if (ele1.contains("No data available")
+                    || ele1.contains("Advertisement")
+                    || ele1.contains("Sponsored")
+                    || ele1.contains("Promotions")
+                    || ele1.contains("Top Picks")
+                    || ele1.contains("Good Housekeeping")
+                    || ele1.contains("DISH subscribers")
+                ) {
+                    continue
+                }
                 val title = element.text().trim()
                 val link = koatUrl + element.select("a").attr("href")
                 val result = HashMap<String, String>()
