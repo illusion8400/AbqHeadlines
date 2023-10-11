@@ -30,7 +30,11 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -47,7 +51,10 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
+import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
 
@@ -60,11 +67,13 @@ class MainActivity : ComponentActivity() {
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
 
+        // Launch main app with swipe refresh
         setContent {
-            WearApp()
+            SwipeRefreshCompose()
         }
     }
 }
+
 @Composable
 fun WearApp() {
     val launcher =
@@ -74,6 +83,7 @@ fun WearApp() {
             }
         }
     val focusRequester: FocusRequester = remember { FocusRequester() }
+
     AbqHeadlinesTheme {
         Column {
             Box(
@@ -130,6 +140,7 @@ fun WearApp() {
                         }
                     }
                 }
+
             }
         }
     }
@@ -143,9 +154,25 @@ fun WearApp() {
             launcher.launch(intent)
         } catch (e: ActivityNotFoundException) {
             // FIXME: Send link to phone or copy link with no browser
-
             Log.e("NoBrowser", "browser error", e)
         }
     }
 
+@Composable
+fun SwipeRefreshCompose() {
 
+    var refreshing by remember { mutableStateOf(false) }
+    LaunchedEffect(refreshing) {
+        if (refreshing) {
+            delay(3000)
+            refreshing = false
+        }
+    }
+
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = refreshing),
+        onRefresh = { refreshing = true },
+    ) {
+        WearApp()
+    }
+}
