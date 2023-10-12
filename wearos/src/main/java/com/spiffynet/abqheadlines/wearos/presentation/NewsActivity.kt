@@ -14,6 +14,7 @@ class NewsActivity : ComponentActivity() {
         val results = ArrayList<Map<String, String>>()
         // KRQE
         val krqeUrl = "http://www.krqe.com"
+        Log.i(TAG, "Pulled krqe")
         try {
             val krqeDoc: Document = Jsoup.connect(krqeUrl).get()
             val krqeTitles: List<Element> =
@@ -32,6 +33,7 @@ class NewsActivity : ComponentActivity() {
 
         // KOAT
         val koatUrl = "http://www.koat.com"
+        Log.i(TAG, "Pulled koat")
         try {
             val koatDoc: Document = Jsoup.connect(koatUrl).get()
             val koatTitles: List<Element> = koatDoc.select("h2, body > div.site-content > main > " +
@@ -60,6 +62,7 @@ class NewsActivity : ComponentActivity() {
         }
         // KOB
         val kobUrl = "http://www.kob.com"
+        Log.i(TAG, "Pulled kob")
         try {
             val kobDoc: Document = Jsoup.connect(kobUrl).get()
             val kobTitles: List<Element> = kobDoc.select("div.col-12.col-md-9.col-lg-8.col-xl-8.pb-2,div.col-8," +

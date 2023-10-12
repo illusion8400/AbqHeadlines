@@ -1,9 +1,3 @@
-/* While this template provides a good starting point for using Wear Compose, you can always
- * take a look at https://github.com/android/wear-os-samples/tree/main/ComposeStarter and
- * https://github.com/android/wear-os-samples/tree/main/ComposeAdvanced to find the most up to date
- * changes to the libraries and their usages.
- */
-
 package com.spiffynet.abqheadlines.wearos.presentation
 
 import android.app.Activity
@@ -30,11 +24,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -51,13 +41,9 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
-import com.google.accompanist.swiperefresh.SwipeRefresh
-import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
-import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
 
@@ -69,13 +55,15 @@ class MainActivity : ComponentActivity() {
 
         // Launch main app with swipe refresh
         setContent {
-            SwipeRefreshCompose()
+            WearApp()
         }
     }
 }
 
 @Composable
 fun WearApp() {
+    val TAG = "WearApp"
+    Log.i(TAG,"start")
     val launcher =
         rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -157,22 +145,3 @@ fun WearApp() {
             Log.e("NoBrowser", "browser error", e)
         }
     }
-
-@Composable
-fun SwipeRefreshCompose() {
-
-    var refreshing by remember { mutableStateOf(false) }
-    LaunchedEffect(refreshing) {
-        if (refreshing) {
-            delay(3000)
-            refreshing = false
-        }
-    }
-
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing = refreshing),
-        onRefresh = { refreshing = true },
-    ) {
-        WearApp()
-    }
-}
