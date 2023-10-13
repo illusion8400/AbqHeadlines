@@ -145,9 +145,10 @@ fun WearApp() {
                                 style = TextStyle(color = MaterialTheme.colors.primary),
                                 modifier = Modifier.fillMaxWidth()
                             )
-
                         }
                     }
+                    Text("")
+                    Text("")
                 }
 
             }
