@@ -13,18 +13,22 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -89,11 +93,20 @@ fun WearApp() {
                             true
                         }
                         .focusRequester(focusRequester)
-                        .focusable()) {
-                    Text(
-                        "\n               ABQHeadlines\n"
-                    )
-                    Divider(color = Color.Red, thickness = 3.dp)
+                        .focusable() ,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Title
+                    Text("")
+                    Card( modifier = Modifier.padding(1.dp),
+                        border = BorderStroke(1.dp, Color.Red),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.Transparent
+                        ),
+                    ) {
+                        Text("  ABQHeadlines  ")
+                    }
+                    // pull results
                     Text("")
                     // sort items
                     for (item in results) {
@@ -108,23 +121,29 @@ fun WearApp() {
                                 append(title)
                             }
                         }
-                        ClickableText(
-                            text = indentedTitle,
-                            onClick = {
-                                // Open the link when the title is clicked
-                                openLinkInBrowser(link, launcher)
+                        Card(
+                            // background colors
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.Transparent
+                            ),
+                            border =
+                            if (link.contains("krqe")) { BorderStroke(1.dp, Color.Blue) }
+                            else if(link.contains("koat")) { BorderStroke(1.dp, Color.Green) }
+                            else if(link.contains("kob")) { BorderStroke(1.dp, Color.Red) }
+                            else { BorderStroke(1.dp, Color.Magenta)
                             },
-                            style = TextStyle(color = MaterialTheme.colors.primary),
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                        if (link.contains("krqe")) {
-                            Divider(color = Color.Blue, thickness = 1.dp)
-                        } else if(link.contains("koat")) {
-                            Divider(color = Color.Green, thickness = 1.dp)
-                        } else if (link.contains("kob")) {
-                            Divider(color = Color.Red, thickness = 1.dp)
-                        } else {
-                            Divider(color = Color.Magenta, thickness = 1.dp)
+                        ) {
+                            ClickableText(
+                                text = indentedTitle,
+                                onClick = {
+                                    // Open the link when the title is clicked
+                                    openLinkInBrowser(link, launcher)
+                                },
+                                // text colors
+                                style = TextStyle(color = MaterialTheme.colors.primary),
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
                         }
                     }
                 }
