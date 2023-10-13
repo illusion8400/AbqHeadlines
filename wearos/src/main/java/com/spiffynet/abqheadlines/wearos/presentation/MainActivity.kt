@@ -16,6 +16,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -56,7 +58,6 @@ class MainActivity : ComponentActivity() {
         setTheme(android.R.style.Theme_DeviceDefault)
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-
         // Launch main app with swipe refresh
         setContent {
             WearApp()
@@ -75,7 +76,6 @@ fun WearApp() {
             }
         }
     val focusRequester: FocusRequester = remember { FocusRequester() }
-
     AbqHeadlinesTheme {
         Column {
             Box(
@@ -84,27 +84,29 @@ fun WearApp() {
                     .background(MaterialTheme.colors.background),
             ) {
                 val results = NewsActivity().fetchNews()
-
+                val flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior()
                 Column(
                     Modifier
-                        .verticalScroll(rememberScrollState())
+                        .verticalScroll(rememberScrollState(), flingBehavior = flingBehavior)
                         .onRotaryScrollEvent {
                             // handle rotary scroll events
                             true
                         }
                         .focusRequester(focusRequester)
-                        .focusable() ,
+                        .focusable(),
                         horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Title
                     Text("")
                     Card( modifier = Modifier.padding(1.dp),
-                        border = BorderStroke(1.dp, Color.Red),
+                        border = BorderStroke(1.dp, MaterialTheme.colors.primary),
                         colors = CardDefaults.cardColors(
                             containerColor = Color.Transparent
                         ),
                     ) {
-                        Text("  ABQHeadlines  ")
+                        Text("  ABQHeadlines  ",
+                            style=TextStyle(color = MaterialTheme.colors.primary)
+                        )
                     }
                     // pull results
                     Text("")
