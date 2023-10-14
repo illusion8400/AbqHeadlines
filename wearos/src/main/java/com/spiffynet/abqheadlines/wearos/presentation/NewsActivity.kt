@@ -10,6 +10,7 @@ import java.io.IOException
 class NewsActivity : ComponentActivity() {
     private val TAG = "NewsActivity"
 
+    @Suppress("NAME_SHADOWING")
     fun fetchNews(): ArrayList<Map<String, String>> {
         val results = ArrayList<Map<String, String>>()
         // KRQE

@@ -18,6 +18,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -49,6 +51,7 @@ import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
+import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,9 +81,9 @@ fun WearApp() {
             }
         }
     val focusRequester: FocusRequester = remember { FocusRequester() }
+
     AbqHeadlinesTheme {
-        // Column -> Box -> Column this is the way
-        Column {
+        // Column -> Box -> Column ... this is the way
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -92,12 +95,16 @@ fun WearApp() {
                 val results = NewsActivity().fetchNews()
                 // scrolling
                 val flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior()
-
+                val listState = rememberScrollState()
+                val coroutineScope = rememberCoroutineScope()
                 Column(
                     Modifier
                         .verticalScroll(rememberScrollState(), flingBehavior = flingBehavior)
                         .onRotaryScrollEvent {
                             // handle rotary scroll events
+                            coroutineScope.launch {
+                                listState.scrollBy(it.verticalScrollPixels.times(25))
+                            }
                             true
                         }
                         .focusRequester(focusRequester)
@@ -161,7 +168,6 @@ fun WearApp() {
             }
         }
     }
-}
 
      fun openLinkInBrowser(link: String, launcher: ActivityResultLauncher<Intent>) {
         val uri = Uri.parse(link)
