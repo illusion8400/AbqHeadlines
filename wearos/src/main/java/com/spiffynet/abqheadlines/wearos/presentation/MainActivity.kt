@@ -30,8 +30,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -47,10 +51,15 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
+import androidx.wear.compose.foundation.rememberActiveFocusRequester
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -70,20 +79,34 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalWearFoundationApi::class)
 @Composable
 fun WearApp() {
-    val TAG = "WearApp"
-    Log.i(TAG,"start")
-    val launcher =
-        rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                // Handle the result, if needed
-            }
+    var refreshing by remember { mutableStateOf(false) }
+    LaunchedEffect(refreshing) {
+        if (refreshing) {
+            delay(3000)
+            refreshing = false
         }
-    val focusRequester: FocusRequester = remember { FocusRequester() }
+    }
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = refreshing),
+        onRefresh = { refreshing = true },
+    ) {
+        if (!refreshing){
+        val TAG = "WearApp"
+        Log.i(TAG, "start")
 
-    AbqHeadlinesTheme {
-        // Column -> Box -> Column ... this is the way
+        val launcher =
+            rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    // Handle the result, if needed
+                }
+            }
+
+        val focusRequester: FocusRequester = rememberActiveFocusRequester()
+
+        AbqHeadlinesTheme {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -109,18 +132,20 @@ fun WearApp() {
                         }
                         .focusRequester(focusRequester)
                         .focusable(),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     // Title
                     Text("")
-                    Card( modifier = Modifier.padding(1.dp),
+                    Card(
+                        modifier = Modifier.padding(1.dp),
                         border = BorderStroke(1.dp, MaterialTheme.colors.primary),
                         colors = CardDefaults.cardColors(
                             containerColor = Color.Transparent
                         ),
                     ) {
-                        Text("  ABQHeadlines  ",
-                            style=TextStyle(color = MaterialTheme.colors.primary)
+                        Text(
+                            "  ABQHeadlines  ",
+                            style = TextStyle(color = MaterialTheme.colors.primary)
                         )
                     }
                     Text("")
@@ -131,8 +156,10 @@ fun WearApp() {
                         // indent and center
                         val indentedTitle = buildAnnotatedString {
                             withStyle(
-                                style = ParagraphStyle(textIndent = TextIndent(firstLine = 5.sp),
-                                    textAlign = TextAlign.Center)
+                                style = ParagraphStyle(
+                                    textIndent = TextIndent(firstLine = 5.sp),
+                                    textAlign = TextAlign.Center
+                                )
                             ) {
                                 append(title)
                             }
@@ -143,10 +170,14 @@ fun WearApp() {
                                 containerColor = Color.Transparent
                             ),
                             border =
-                            if (link.contains("krqe")) { BorderStroke(1.dp, Color.Blue) }
-                            else if(link.contains("koat")) { BorderStroke(1.dp, Color.Green) }
-                            else if(link.contains("kob")) { BorderStroke(1.dp, Color.Red) }
-                            else { BorderStroke(1.dp, Color.Magenta)
+                            if (link.contains("krqe")) {
+                                BorderStroke(1.dp, Color.Blue)
+                            } else if (link.contains("koat")) {
+                                BorderStroke(1.dp, Color.Green)
+                            } else if (link.contains("kob")) {
+                                BorderStroke(1.dp, Color.Red)
+                            } else {
+                                BorderStroke(1.dp, Color.Magenta)
                             },
                         ) {
                             ClickableText(
@@ -157,18 +188,20 @@ fun WearApp() {
                                 },
                                 // text colors
                                 style = TextStyle(color = MaterialTheme.colors.primary),
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier
+                                    .fillMaxWidth()
                             )
                         }
                     }
                     Text("")
                     Text("")
                 }
-
             }
+
         }
     }
-
+}
+}
      fun openLinkInBrowser(link: String, launcher: ActivityResultLauncher<Intent>) {
         val uri = Uri.parse(link)
         val intent = Intent(Intent.ACTION_VIEW, uri)
