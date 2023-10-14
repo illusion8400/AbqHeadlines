@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Text
+import androidx.wear.compose.material.TimeText
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
 
 class MainActivity : ComponentActivity() {
@@ -58,7 +59,8 @@ class MainActivity : ComponentActivity() {
         setTheme(android.R.style.Theme_DeviceDefault)
         val policy = ThreadPolicy.Builder().permitAll().build()
         StrictMode.setThreadPolicy(policy)
-        // Launch main app with swipe refresh
+
+        // Launch main app
         setContent {
             WearApp()
         }
@@ -77,14 +79,20 @@ fun WearApp() {
         }
     val focusRequester: FocusRequester = remember { FocusRequester() }
     AbqHeadlinesTheme {
+        // Column -> Box -> Column this is the way
         Column {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colors.background),
             ) {
+                // Time at top
+                TimeText()
+                // fetch news
                 val results = NewsActivity().fetchNews()
+                // scrolling
                 val flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior()
+
                 Column(
                     Modifier
                         .verticalScroll(rememberScrollState(), flingBehavior = flingBehavior)
@@ -108,9 +116,8 @@ fun WearApp() {
                             style=TextStyle(color = MaterialTheme.colors.primary)
                         )
                     }
-                    // pull results
                     Text("")
-                    // sort items
+                    // pull results
                     for (item in results) {
                         val title = item["title"] ?: ""
                         val link = item["link"] ?: ""
