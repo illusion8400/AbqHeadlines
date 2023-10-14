@@ -19,6 +19,13 @@ class NewsActivity : ComponentActivity() {
             val krqeDoc: Document = Jsoup.connect(krqeUrl).get()
             val krqeTitles: List<Element> =
                 krqeDoc.select("h3.article-list__article-title")
+            // add title
+            val titleLead = "KRQE"
+            val result = HashMap<String, String>()
+            result["title"] = titleLead
+            result["link"] = krqeUrl
+            results.add(result)
+            // start
             for (element in krqeTitles) {
                 val title = element.text().trim()
                 val link = element.select("a").attr("href")
@@ -38,6 +45,13 @@ class NewsActivity : ComponentActivity() {
             val koatDoc: Document = Jsoup.connect(koatUrl).get()
             val koatTitles: List<Element> = koatDoc.select("h2, body > div.site-content > main > " +
                     "div.listing-page > div > div.grid-content.listbox > div.grid-content-inner > ul > li > a")
+            // add title
+            val titleLead = "KOAT"
+            val result = HashMap<String, String>()
+            result["title"] = titleLead
+            result["link"] = koatUrl
+            results.add(result)
+            // start
             for (element in koatTitles) {
                 val ele1 = element.toString()
                 if (ele1.contains("No data available")
@@ -47,6 +61,7 @@ class NewsActivity : ComponentActivity() {
                     || ele1.contains("Top Picks")
                     || ele1.contains("Good Housekeeping")
                     || ele1.contains("DISH subscribers")
+                    || ele1.contains("KOAT Albuquerque")
                 ) {
                     continue
                 }
@@ -67,6 +82,13 @@ class NewsActivity : ComponentActivity() {
             val kobDoc: Document = Jsoup.connect(kobUrl).get()
             val kobTitles: List<Element> = kobDoc.select("div.col-12.col-md-9.col-lg-8.col-xl-8.pb-2,div.col-8," +
                     "div.col-12.col-sm-6.col-md-12.pb-2")
+            // add title
+            val titleLead = "KOB"
+            val result = HashMap<String, String>()
+            result["title"] = titleLead
+            result["link"] = kobUrl
+            results.add(result)
+            // start
             for (element in kobTitles) {
                 val title = element.text().trim()
                 val link = element.select("a").attr("href")
