@@ -8,18 +8,18 @@ import android.os.Bundle
 import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableDefaults
+import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -42,6 +42,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -54,6 +55,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.rememberActiveFocusRequester
 import androidx.wear.compose.material.MaterialTheme
+import androidx.wear.compose.material.PositionIndicator
+import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -61,6 +64,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +86,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalWearFoundationApi::class)
 @Composable
 fun WearApp() {
+
     var refreshing by remember { mutableStateOf(false) }
     LaunchedEffect(refreshing) {
         if (refreshing) {
@@ -89,119 +94,127 @@ fun WearApp() {
             refreshing = false
         }
     }
+
+    val listState = rememberScrollState()
+
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing = refreshing),
         onRefresh = { refreshing = true },
     ) {
+        Toast.makeText(LocalContext.current,"Loading...",Toast.LENGTH_SHORT).show()
         if (!refreshing){
-        val TAG = "WearApp"
-        Log.i(TAG, "start")
-
-        val launcher =
-            rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    // Handle the result, if needed
-                }
-            }
-
-        val focusRequester: FocusRequester = rememberActiveFocusRequester()
-
-        AbqHeadlinesTheme {
-            Box(
+            Scaffold(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colors.background),
+                    .fillMaxSize(),
+                positionIndicator = { PositionIndicator(scrollState = listState )}
             ) {
-                // Time at top
-                TimeText()
-                // fetch news
-                val results = NewsActivity().fetchNews()
-                // scrolling
-                val flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior()
-                val listState = rememberScrollState()
-                val coroutineScope = rememberCoroutineScope()
-                Column(
-                    Modifier
-                        .verticalScroll(rememberScrollState(), flingBehavior = flingBehavior)
-                        .onRotaryScrollEvent {
-                            // handle rotary scroll events
-                            coroutineScope.launch {
-                                listState.scrollBy(it.verticalScrollPixels.times(25))
-                            }
-                            true
+                val TAG = "WearApp"
+                Log.i(TAG, "start")
+
+                val launcher =
+                    rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                        if (result.resultCode == Activity.RESULT_OK) {
+                            // Handle the result, if needed
                         }
-                        .focusRequester(focusRequester)
-                        .focusable(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Title
-                    Text("")
-                    Card(
-                        modifier = Modifier.padding(1.dp),
-                        border = BorderStroke(1.dp, MaterialTheme.colors.primary),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.Transparent
-                        ),
-                    ) {
-                        Text(
-                            "  ABQHeadlines  ",
-                            style = TextStyle(color = MaterialTheme.colors.primary)
-                        )
                     }
-                    Text("")
-                    // pull results
-                    for (item in results) {
-                        val title = item["title"] ?: ""
-                        val link = item["link"] ?: ""
-                        // indent and center
-                        val indentedTitle = buildAnnotatedString {
-                            withStyle(
-                                style = ParagraphStyle(
-                                    textIndent = TextIndent(firstLine = 5.sp),
-                                    textAlign = TextAlign.Center
-                                )
-                            ) {
-                                append(title)
+
+                AbqHeadlinesTheme {
+
+                    // Time at top
+                    TimeText(
+                        timeTextStyle = TextStyle(MaterialTheme.colors.primary)
+                    )
+                    // fetch news
+                    val results = NewsActivity().fetchNews()
+                    // scrolling
+                    val flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior()
+                    val coroutineScope = rememberCoroutineScope()
+                    val focusRequester: FocusRequester = rememberActiveFocusRequester()
+                    LaunchedEffect(listState) { focusRequester.requestFocus() }
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(listState, flingBehavior = flingBehavior)
+                            .onRotaryScrollEvent {
+                                // handle rotary scroll events
+                                coroutineScope.launch {
+                                    listState.scrollBy(it.verticalScrollPixels * 20)
+                                    listState.animateScrollBy(0f)
+                                }
+                                true
                             }
-                        }
+                            .focusRequester(focusRequester)
+                            .focusable(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+
+                        // Title
+                        Text("")
                         Card(
-                            // background colors
+                            modifier = Modifier.padding(1.dp),
+                            border = BorderStroke(1.dp, MaterialTheme.colors.primary),
                             colors = CardDefaults.cardColors(
                                 containerColor = Color.Transparent
                             ),
-                            border =
-                            if (link.contains("krqe")) {
-                                BorderStroke(1.dp, Color.Blue)
-                            } else if (link.contains("koat")) {
-                                BorderStroke(1.dp, Color.Green)
-                            } else if (link.contains("kob")) {
-                                BorderStroke(1.dp, Color.Red)
-                            } else {
-                                BorderStroke(1.dp, Color.Magenta)
-                            },
                         ) {
-                            ClickableText(
-                                text = indentedTitle,
-                                onClick = {
-                                    // Open the link when the title is clicked
-                                    openLinkInBrowser(link, launcher)
-                                },
-                                // text colors
-                                style = TextStyle(color = MaterialTheme.colors.primary),
-                                modifier = Modifier
-                                    .fillMaxWidth()
+                            Text(
+                                "  ABQHeadlines  ",
+                                style = TextStyle(color = MaterialTheme.colors.primary)
                             )
                         }
+                        Text("")
+                        // pull results
+                        for (item in results) {
+                            val title = item["title"] ?: ""
+                            val link = item["link"] ?: ""
+                            // indent and center
+                            val indentedTitle = buildAnnotatedString {
+                                withStyle(
+                                    style = ParagraphStyle(
+                                        textIndent = TextIndent(firstLine = 5.sp),
+                                        textAlign = TextAlign.Center
+                                    )
+                                ) {
+                                    append(title)
+                                }
+                            }
+                            Card(
+                                // background colors
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color.Transparent
+                                ),
+                                border =
+                                if (link.contains("krqe")) {
+                                    BorderStroke(1.dp, Color.Blue)
+                                } else if (link.contains("koat")) {
+                                    BorderStroke(1.dp, Color.Green)
+                                } else if (link.contains("kob")) {
+                                    BorderStroke(1.dp, Color.Red)
+                                } else {
+                                    BorderStroke(1.dp, Color.Magenta)
+                                },
+                            ) {
+                                ClickableText(
+                                    text = indentedTitle,
+                                    onClick = {
+                                        // Open the link when the title is clicked
+                                        openLinkInBrowser(link, launcher)
+                                    },
+                                    // text colors
+                                    style = TextStyle(color = MaterialTheme.colors.primary),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                )
+                            }
+                        }
+                        Text("")
+                        Text("")
                     }
-                    Text("")
-                    Text("")
                 }
             }
-
         }
     }
 }
-}
+
      fun openLinkInBrowser(link: String, launcher: ActivityResultLauncher<Intent>) {
         val uri = Uri.parse(link)
         val intent = Intent(Intent.ACTION_VIEW, uri)
