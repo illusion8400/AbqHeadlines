@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextIndent
 import androidx.compose.ui.text.withStyle
@@ -158,7 +159,7 @@ fun WearApp() {
                         ) {
                             Text(
                                 "  ABQHeadlines  ",
-                                style = TextStyle(color = MaterialTheme.colors.primary)
+                                style = TextStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
                             )
                         }
                         Text("")
@@ -178,10 +179,6 @@ fun WearApp() {
                                 }
                             }
                             Card(
-                                // background colors
-                                colors = CardDefaults.cardColors(
-                                    containerColor = Color.Transparent
-                                ),
                                 border =
                                 if (link.contains("krqe")) {
                                     BorderStroke(1.dp, Color.Blue)
@@ -192,6 +189,15 @@ fun WearApp() {
                                 } else {
                                     BorderStroke(1.dp, Color.Magenta)
                                 },
+
+                                // background colors
+                                colors =
+                                when (title) {
+                                    "KRQE" -> {CardDefaults.cardColors(containerColor = Color.Blue)}
+                                    "KOAT" -> {CardDefaults.cardColors(containerColor = Color.Green)}
+                                    "KOB" -> {CardDefaults.cardColors(containerColor = Color.Red)}
+                                    else -> {CardDefaults.cardColors(containerColor = Color.Transparent)}
+                                }
                             ) {
                                 ClickableText(
                                     text = indentedTitle,
@@ -200,7 +206,15 @@ fun WearApp() {
                                         openLinkInBrowser(link, launcher)
                                     },
                                     // text colors
-                                    style = TextStyle(color = MaterialTheme.colors.primary),
+                                    style = TextStyle(
+                                        color = MaterialTheme.colors.primary,
+                                        fontWeight = if (title == "KRQE" || title == "KOAT" || title == "KOB") {
+                                            FontWeight.SemiBold
+                                        }
+                                        else {
+                                            FontWeight.Normal
+                                        },
+                                    ),
                                     modifier = Modifier
                                         .fillMaxWidth()
                                 )
