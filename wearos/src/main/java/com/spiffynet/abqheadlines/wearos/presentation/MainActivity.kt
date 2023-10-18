@@ -15,6 +15,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableDefaults
@@ -43,6 +44,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -62,10 +64,10 @@ import androidx.wear.compose.material.Text
 import androidx.wear.compose.material.TimeText
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.spiffynet.abqheadlines.wearos.R
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -147,9 +149,8 @@ fun WearApp() {
                             .focusable(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-
-                        // Title
                         Text("")
+                        // Title
                         Card(
                             modifier = Modifier.padding(1.dp),
                             border = BorderStroke(1.dp, MaterialTheme.colors.primary),
@@ -162,7 +163,6 @@ fun WearApp() {
                                 style = TextStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
                             )
                         }
-                        Text("")
                         // pull results
                         for (item in results) {
                             val title = item["title"] ?: ""
@@ -178,6 +178,48 @@ fun WearApp() {
                                     append(title)
                                 }
                             }
+                            // icon and styling
+                            when (title) {
+                                "KRQE" -> {
+                                    Card(
+                                        border = BorderStroke(1.dp, Color.Blue),
+                                        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.krqe_logo_round),
+                                            contentDescription = null,
+                                            alignment = Alignment.Center
+                                        )
+                                    }
+                                    continue
+                                }
+                                "KOAT" -> {
+                                    Card(
+                                        border = BorderStroke(1.dp, Color.Green),
+                                        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.koat_logo_round),
+                                            contentDescription = null,
+                                            alignment = Alignment.Center
+                                        )
+                                    }
+                                    continue
+                                }
+                                "KOB" -> {
+                                    Card(
+                                        border = BorderStroke(1.dp, Color.Red),
+                                        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.kob_logo_round),
+                                            contentDescription = null,
+                                            alignment = Alignment.Center
+                                        )
+                                    }
+                                    continue
+                                }
+                            }
                             Card(
                                 border =
                                 if (link.contains("krqe")) {
@@ -191,13 +233,7 @@ fun WearApp() {
                                 },
 
                                 // background colors
-                                colors =
-                                when (title) {
-                                    "KRQE" -> {CardDefaults.cardColors(containerColor = Color.Blue)}
-                                    "KOAT" -> {CardDefaults.cardColors(containerColor = Color.Green)}
-                                    "KOB" -> {CardDefaults.cardColors(containerColor = Color.Red)}
-                                    else -> {CardDefaults.cardColors(containerColor = Color.Transparent)}
-                                }
+                                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
                             ) {
                                 ClickableText(
                                     text = indentedTitle,
@@ -206,15 +242,7 @@ fun WearApp() {
                                         openLinkInBrowser(link, launcher)
                                     },
                                     // text colors
-                                    style = TextStyle(
-                                        color = MaterialTheme.colors.primary,
-                                        fontWeight = if (title == "KRQE" || title == "KOAT" || title == "KOB") {
-                                            FontWeight.SemiBold
-                                        }
-                                        else {
-                                            FontWeight.Normal
-                                        },
-                                    ),
+                                    style = TextStyle(color = MaterialTheme.colors.primary),
                                     modifier = Modifier
                                         .fillMaxWidth()
                                 )
