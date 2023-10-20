@@ -16,6 +16,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableDefaults
@@ -97,19 +98,18 @@ fun WearApp() {
             refreshing = false
         }
     }
-
     val listState = rememberScrollState()
 
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing = refreshing),
         onRefresh = { refreshing = true },
     ) {
-        Toast.makeText(LocalContext.current,"Loading...",Toast.LENGTH_SHORT).show()
-        if (!refreshing){
+        Toast.makeText(LocalContext.current, "Loading...", Toast.LENGTH_SHORT).show()
+        if (!refreshing) {
             Scaffold(
                 modifier = Modifier
                     .fillMaxSize(),
-                positionIndicator = { PositionIndicator(scrollState = listState )}
+                positionIndicator = { PositionIndicator(scrollState = listState) }
             ) {
                 val TAG = "WearApp"
                 Log.i(TAG, "start")
@@ -121,19 +121,23 @@ fun WearApp() {
                         }
                     }
 
+
                 AbqHeadlinesTheme {
 
                     // Time at top
                     TimeText(
                         timeTextStyle = TextStyle(MaterialTheme.colors.primary)
                     )
-                    // fetch news
-                    val results = NewsActivity().fetchNews()
+
                     // scrolling
                     val flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior()
                     val coroutineScope = rememberCoroutineScope()
                     val focusRequester: FocusRequester = rememberActiveFocusRequester()
+                    var selectedLink by remember { mutableStateOf<String?>(null) }
+                    var showPageParser by remember { mutableStateOf(false) }
                     LaunchedEffect(listState) { focusRequester.requestFocus() }
+
+
                     Column(
                         modifier = Modifier
                             .verticalScroll(listState, flingBehavior = flingBehavior)
@@ -149,107 +153,132 @@ fun WearApp() {
                             .focusable(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Text("")
-                        // Title
-                        Card(
-                            modifier = Modifier.padding(1.dp),
-                            border = BorderStroke(1.dp, MaterialTheme.colors.primary),
-                            colors = CardDefaults.cardColors(
-                                containerColor = Color.Transparent
-                            ),
-                        ) {
-                            Text(
-                                "  ABQHeadlines  ",
-                                style = TextStyle(color = MaterialTheme.colors.primary, fontWeight = FontWeight.Bold)
-                            )
-                        }
-                        // pull results
-                        for (item in results) {
-                            val title = item["title"] ?: ""
-                            val link = item["link"] ?: ""
-                            // indent and center
-                            val indentedTitle = buildAnnotatedString {
-                                withStyle(
-                                    style = ParagraphStyle(
-                                        textIndent = TextIndent(firstLine = 5.sp),
-                                        textAlign = TextAlign.Center
-                                    )
-                                ) {
-                                    append(title)
-                                }
-                            }
-                            // icon and styling
-                            when (title) {
-                                "KRQE" -> {
-                                    Card(
-                                        border = BorderStroke(1.dp, Color.Blue),
-                                        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.krqe_logo_round),
-                                            contentDescription = null,
-                                            alignment = Alignment.Center
-                                        )
-                                    }
-                                    continue
-                                }
-                                "KOAT" -> {
-                                    Card(
-                                        border = BorderStroke(1.dp, Color.Green),
-                                        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.koat_logo_round),
-                                            contentDescription = null,
-                                            alignment = Alignment.Center
-                                        )
-                                    }
-                                    continue
-                                }
-                                "KOB" -> {
-                                    Card(
-                                        border = BorderStroke(1.dp, Color.Red),
-                                        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-                                    ) {
-                                        Image(
-                                            painter = painterResource(id = R.drawable.kob_logo_round),
-                                            contentDescription = null,
-                                            alignment = Alignment.Center
-                                        )
-                                    }
-                                    continue
-                                }
-                            }
+                        if (!showPageParser) {
+                            Text("")
+                            // Title
                             Card(
-                                border =
-                                if (link.contains("krqe")) {
-                                    BorderStroke(1.dp, Color.Blue)
-                                } else if (link.contains("koat")) {
-                                    BorderStroke(1.dp, Color.Green)
-                                } else if (link.contains("kob")) {
-                                    BorderStroke(1.dp, Color.Red)
-                                } else {
-                                    BorderStroke(1.dp, Color.Magenta)
-                                },
-
-                                // background colors
-                                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                                modifier = Modifier.padding(1.dp),
+                                border = BorderStroke(1.dp, MaterialTheme.colors.primary),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color.Transparent
+                                ),
                             ) {
-                                ClickableText(
-                                    text = indentedTitle,
-                                    onClick = {
-                                        // Open the link when the title is clicked
-                                        openLinkInBrowser(link, launcher)
-                                    },
-                                    // text colors
-                                    style = TextStyle(color = MaterialTheme.colors.primary),
-                                    modifier = Modifier
-                                        .fillMaxWidth()
+                                Text(
+                                    "  ABQHeadlines  ",
+                                    style = TextStyle(
+                                        color = MaterialTheme.colors.primary,
+                                        fontWeight = FontWeight.Bold
+                                    )
                                 )
                             }
+                            // fetch news
+                            var results by remember { mutableStateOf(NewsActivity().fetchNews()) }
+
+                            // pull results
+
+                            for (item in results) {
+                                val title = item["title"] ?: ""
+                                val link = item["link"] ?: ""
+                                // indent and center
+                                val indentedTitle = buildAnnotatedString {
+                                    withStyle(
+                                        style = ParagraphStyle(
+                                            textIndent = TextIndent(firstLine = 5.sp),
+                                            textAlign = TextAlign.Center
+                                        )
+                                    ) {
+                                        append(title)
+                                    }
+                                }
+                                // icon and styling
+                                when (title) {
+                                    "KRQE" -> {
+                                        Card(
+                                            border = BorderStroke(1.dp, Color.Blue),
+                                            colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                                        ) {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.krqe_logo_round),
+                                                contentDescription = null,
+                                                alignment = Alignment.Center
+                                            )
+                                        }
+                                        continue
+                                    }
+
+                                    "KOAT" -> {
+                                        Card(
+                                            border = BorderStroke(1.dp, Color.Green),
+                                            colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                                        ) {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.koat_logo_round),
+                                                contentDescription = null,
+                                                alignment = Alignment.Center
+                                            )
+                                        }
+                                        continue
+                                    }
+
+                                    "KOB" -> {
+                                        Card(
+                                            border = BorderStroke(1.dp, Color.Red),
+                                            colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                                        ) {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.kob_logo_round),
+                                                contentDescription = null,
+                                                alignment = Alignment.Center
+                                            )
+                                        }
+                                        continue
+                                    }
+                                }
+                                Card(
+                                    border =
+                                    if (link.contains("krqe")) {
+                                        BorderStroke(1.dp, Color.Blue)
+                                    } else if (link.contains("koat")) {
+                                        BorderStroke(1.dp, Color.Green)
+                                    } else if (link.contains("kob")) {
+                                        BorderStroke(1.dp, Color.Red)
+                                    } else {
+                                        BorderStroke(1.dp, Color.Magenta)
+                                    },
+
+                                    // background colors
+                                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                                ) {
+                                    ClickableText(
+                                        text = indentedTitle,
+                                        onClick = {
+                                            // Open the link when the title is clicked
+//                                        openLinkInBrowser(link, launcher)
+                                            selectedLink = link
+                                            showPageParser = true
+
+                                        },
+                                        // text colors
+                                        style = TextStyle(color = MaterialTheme.colors.primary),
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                    )
+                                }
+                            }
+                            Text("")
+                            Text("")
+                        } else {
+                            Text(text = "")
+                            Image(painter = painterResource(id = R.drawable.app_icon_round),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .clickable { showPageParser = false }
+                            )
+                            // Display PageParser content when showPageParser is true
+                            selectedLink?.let { link ->
+                                PageParser().NewWear(url = link)
+                            }
                         }
-                        Text("")
-                        Text("")
                     }
                 }
             }
@@ -257,14 +286,14 @@ fun WearApp() {
     }
 }
 
-     fun openLinkInBrowser(link: String, launcher: ActivityResultLauncher<Intent>) {
-        val uri = Uri.parse(link)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
+ fun openLinkInBrowser(link: String, launcher: ActivityResultLauncher<Intent>) {
+    val uri = Uri.parse(link)
+    val intent = Intent(Intent.ACTION_VIEW, uri)
 
-        try {
-            launcher.launch(intent)
-        } catch (e: ActivityNotFoundException) {
-            // FIXME: Send link to phone or copy link with no browser
-            Log.e("NoBrowser", "browser error", e)
-        }
+    try {
+        launcher.launch(intent)
+    } catch (e: ActivityNotFoundException) {
+        // FIXME: Send link to phone or copy link with no browser
+        Log.e("NoBrowser", "browser error", e)
     }
+}
