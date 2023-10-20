@@ -29,8 +29,19 @@ class PageParser: ComponentActivity() {
     fun getTheSite(url:String): String {
         val pulledSite: Document = Jsoup.connect(url).get()
         val pulledSite1 =
-            pulledSite.select("main > article > div.article-content.article-body.rich-text > p")
+            if (url.contains("krqe")) {
+                pulledSite.select("main > article > div.article-content.article-body.rich-text > p")
+            }
+            else if(url.contains("koat")) {
+                pulledSite.select("body > div.site-content > main > div > div.articles-container > article > div > div.article-content--body > div > div.article-content--body-inner > div.article-content--body-text > p")
+            }
+            else if(url.contains("kob")) {
+                pulledSite.select("#storyContent > p")
+            }
+            else {pulledSite.select("body")}
+
         return pulledSite1.text()
+
     }
 
 

@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -67,6 +68,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.spiffynet.abqheadlines.wearos.R
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
+import kotlinx.coroutines.NonCancellable.key
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -104,7 +106,7 @@ fun WearApp() {
         state = rememberSwipeRefreshState(isRefreshing = refreshing),
         onRefresh = { refreshing = true },
     ) {
-        Toast.makeText(LocalContext.current, "Loading...", Toast.LENGTH_SHORT).show()
+        Toast.makeText(LocalContext.current, "Loading...", Toast.LENGTH_LONG).show()
         if (!refreshing) {
             Scaffold(
                 modifier = Modifier
@@ -172,7 +174,7 @@ fun WearApp() {
                                 )
                             }
                             // fetch news
-                            var results by remember { mutableStateOf(NewsActivity().fetchNews()) }
+                            var results by rememberSaveable { mutableStateOf(NewsActivity().fetchNews()) }
 
                             // pull results
 
@@ -274,7 +276,8 @@ fun WearApp() {
                                 modifier = Modifier
                                     .clickable { showPageParser = false }
                             )
-                            // Display PageParser content when showPageParser is true
+                            Toast.makeText(LocalContext.current, "Loading...", Toast.LENGTH_SHORT).show()
+                            LaunchedEffect(key1 = key) {listState.scrollTo(0)}
                             selectedLink?.let { link ->
                                 PageParser().NewWear(url = link)
                             }
