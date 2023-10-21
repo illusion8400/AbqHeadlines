@@ -17,7 +17,7 @@ class PageParser: ComponentActivity() {
         AbqHeadlinesTheme {
             Scaffold{
                     Text(
-                        "\n" + pulledSite + "\n\n\n\n",
+                        "\n" + pulledSite,
                         fontSize = 12.sp,
                         textAlign = TextAlign.Center
                     )

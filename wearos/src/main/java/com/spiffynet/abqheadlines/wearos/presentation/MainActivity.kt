@@ -9,6 +9,7 @@ import android.os.StrictMode
 import android.os.StrictMode.ThreadPolicy
 import android.util.Log
 import android.widget.Toast
+import android.window.OnBackInvokedDispatcher
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
@@ -16,12 +17,15 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.FlingBehavior
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +35,8 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -68,7 +74,6 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.spiffynet.abqheadlines.wearos.R
 import com.spiffynet.abqheadlines.wearos.presentation.theme.AbqHeadlinesTheme
-import kotlinx.coroutines.NonCancellable.key
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -86,6 +91,11 @@ class MainActivity : ComponentActivity() {
         setContent {
             WearApp()
         }
+    }
+
+    override fun getOnBackInvokedDispatcher(): OnBackInvokedDispatcher {
+
+        return super.getOnBackInvokedDispatcher()
     }
 }
 
@@ -122,6 +132,7 @@ fun WearApp() {
                             // Handle the result, if needed
                         }
                     }
+
                 // fetch news
                 var results by rememberSaveable { mutableStateOf(NewsActivity().fetchNews()) }
                 if (refreshing) {
@@ -141,8 +152,9 @@ fun WearApp() {
                     val focusRequester: FocusRequester = rememberActiveFocusRequester()
                     var selectedLink by remember { mutableStateOf<String?>(null) }
                     var showPageParser by remember { mutableStateOf(false) }
+                    var showPageParser1 by remember { mutableStateOf(false) }
+                    val toast1 = Toast.makeText(LocalContext.current, "Loading...", Toast.LENGTH_SHORT)
                     LaunchedEffect(listState) { focusRequester.requestFocus() }
-
 
                     Column(
                         modifier = Modifier
@@ -152,6 +164,7 @@ fun WearApp() {
                                 coroutineScope.launch {
                                     listState.scrollBy(it.verticalScrollPixels * 20)
                                     listState.animateScrollBy(0f)
+
                                 }
                                 true
                             }
@@ -160,6 +173,7 @@ fun WearApp() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
                         if (!showPageParser) {
+                            showPageParser1 = false
                             Text("")
                             // Title
                             Card(
@@ -254,6 +268,7 @@ fun WearApp() {
                                     // background colors
                                     colors = CardDefaults.cardColors(containerColor = Color.Transparent)
                                 ) {
+
                                     ClickableText(
                                         text = indentedTitle,
                                         onClick = {
@@ -272,17 +287,61 @@ fun WearApp() {
                             }
                             Text("")
                             Text("")
+
                         } else {
-                            Text(text = "")
-                            Image(painter = painterResource(id = R.drawable.app_icon_round),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .clickable { showPageParser = false }
-                            )
-                            Toast.makeText(LocalContext.current, "Loading...", Toast.LENGTH_SHORT).show()
-                            LaunchedEffect(key1 = key) {listState.scrollTo(0)}
-                            selectedLink?.let { link ->
-                                PageParser().NewWear(url = link)
+                            @Composable
+                            fun openLinkInTextReader() {
+                                Text(text = "")
+                                Image(painter = painterResource(id = R.drawable.app_icon_round), contentDescription = null)
+                                Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .clickable { showPageParser = false }
+                                )
+                                selectedLink?.let { link ->
+                                    PageParser().NewWear(url = link)
+                                }
+                                Text(text = "")
+                                Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .clickable { showPageParser = false }
+                                )
+                                Text(text = "\n\n")
+                            }
+                            Box {
+                                var expanded by remember { mutableStateOf(true) }
+                                DropdownMenu(
+                                    expanded = expanded,
+                                    onDismissRequest = { showPageParser = false },
+                                    modifier = Modifier
+                                        .background(Color.Black)
+                                        .align(alignment = Alignment.TopCenter),
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text(text = "Text Reader") },
+                                        onClick = {
+                                            toast1.show()
+                                            expanded = false
+                                            showPageParser1 = true
+                                        },
+                                        modifier = Modifier
+                                            .border(BorderStroke(1.dp, MaterialTheme.colors.primary))
+                                    )
+                                    DropdownMenuItem(
+                                        text = { Text("Web Browser") },
+                                        onClick = {
+                                        expanded = false
+                                        showPageParser1 = false
+                                        openLinkInBrowser(selectedLink, launcher)
+                                        showPageParser = false
+                                        },
+                                        modifier = Modifier.border(BorderStroke(1.dp, MaterialTheme.colors.primary))
+                                    )
+                                }
+                            }
+                            if (showPageParser1) {
+                                openLinkInTextReader()
                             }
                         }
                     }
@@ -292,7 +351,8 @@ fun WearApp() {
     }
 }
 
- fun openLinkInBrowser(link: String, launcher: ActivityResultLauncher<Intent>) {
+ fun openLinkInBrowser(link: String?, launcher: ActivityResultLauncher<Intent>) {
+
     val uri = Uri.parse(link)
     val intent = Intent(Intent.ACTION_VIEW, uri)
 
