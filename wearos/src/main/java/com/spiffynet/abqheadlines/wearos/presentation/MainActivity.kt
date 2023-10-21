@@ -94,6 +94,7 @@ class MainActivity : ComponentActivity() {
 fun WearApp() {
 
     var refreshing by remember { mutableStateOf(false) }
+    // refresh
     LaunchedEffect(refreshing) {
         if (refreshing) {
             delay(3000)
@@ -101,7 +102,6 @@ fun WearApp() {
         }
     }
     val listState = rememberScrollState()
-
     SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing = refreshing),
         onRefresh = { refreshing = true },
@@ -122,7 +122,11 @@ fun WearApp() {
                             // Handle the result, if needed
                         }
                     }
-
+                // fetch news
+                var results by rememberSaveable { mutableStateOf(NewsActivity().fetchNews()) }
+                if (refreshing) {
+                    results = NewsActivity().fetchNews()
+                }
 
                 AbqHeadlinesTheme {
 
@@ -173,8 +177,7 @@ fun WearApp() {
                                     )
                                 )
                             }
-                            // fetch news
-                            var results by rememberSaveable { mutableStateOf(NewsActivity().fetchNews()) }
+
 
                             // pull results
 
