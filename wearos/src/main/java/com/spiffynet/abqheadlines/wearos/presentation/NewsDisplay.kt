@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.verticalScroll
@@ -300,6 +301,10 @@ class NewsDisplay {
                                                 .align(alignment = Alignment.BottomCenter),
                                         ) {
                                             DropdownMenuItem(
+                                                modifier = Modifier.size(height = 33.dp, width = 10.dp),
+                                                text = { Text("") },
+                                                onClick = { expanded = false })
+                                            DropdownMenuItem(
                                                 text = {
                                                     Text(
                                                         "  Front Page",
@@ -331,6 +336,32 @@ class NewsDisplay {
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
+                                                        text = "Text Reader",
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                },
+                                                leadingIcon = {
+                                                    Image(
+                                                        painter = painterResource(id = R.drawable.app_icon_round),
+                                                        contentDescription = null
+                                                    )
+                                                },
+                                                onClick = {
+                                                    expanded = false
+                                                    showPageParser1 = true
+                                                },
+                                                modifier = Modifier
+                                                    .border(
+                                                        BorderStroke(
+                                                            1.dp,
+                                                            MaterialTheme.colors.primary
+                                                        )
+                                                    )
+                                                    .align(Alignment.CenterHorizontally)
+                                            )
+                                            DropdownMenuItem(
+                                                text = {
+                                                    Text(
                                                         "  Web Browser",
                                                         textAlign = TextAlign.Center
                                                     )
@@ -346,32 +377,6 @@ class NewsDisplay {
                                                     showPageParser1 = false
                                                     openLinkInBrowser(selectedLink, launcher)
                                                     showPageParser = false
-                                                },
-                                                modifier = Modifier
-                                                    .border(
-                                                        BorderStroke(
-                                                            1.dp,
-                                                            MaterialTheme.colors.primary
-                                                        )
-                                                    )
-                                                    .align(Alignment.CenterHorizontally)
-                                            )
-                                            DropdownMenuItem(
-                                                text = {
-                                                    Text(
-                                                        text = "Text Reader",
-                                                        textAlign = TextAlign.Center
-                                                    )
-                                                },
-                                                leadingIcon = {
-                                                    Image(
-                                                        painter = painterResource(id = R.drawable.app_icon_round),
-                                                        contentDescription = null
-                                                    )
-                                                },
-                                                onClick = {
-                                                    expanded = false
-                                                    showPageParser1 = true
                                                 },
                                                 modifier = Modifier
                                                     .border(
