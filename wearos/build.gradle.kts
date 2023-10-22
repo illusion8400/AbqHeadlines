@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId = "com.spiffynet.abqheadlines"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 5
         versionName = "1.0"
         vectorDrawables {

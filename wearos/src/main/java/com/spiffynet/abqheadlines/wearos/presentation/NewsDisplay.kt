@@ -15,9 +15,11 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.gestures.FlingBehavior
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.gestures.animateScrollBy
 import androidx.compose.foundation.gestures.scrollBy
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -298,7 +300,11 @@ class NewsDisplay {
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .background(Color.Black)
-                                                .align(alignment = Alignment.BottomCenter),
+                                                .align(alignment = Alignment.BottomCenter)
+                                                .scrollable(
+                                                    state = rememberScrollState(),
+                                                    orientation = Orientation.Vertical
+                                                ),
                                         ) {
                                             DropdownMenuItem(
                                                 modifier = Modifier.size(height = 33.dp, width = 10.dp),
@@ -307,14 +313,16 @@ class NewsDisplay {
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
-                                                        "  Front Page",
+                                                        "Front Page",
                                                         textAlign = TextAlign.Center
                                                     )
                                                 },
                                                 leadingIcon = {
                                                     Icon(
-                                                        painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
-                                                        contentDescription = null
+                                                        painter = painterResource(id = com.google.android.material.R.drawable.mtrl_ic_arrow_drop_up),
+                                                        contentDescription = null,
+                                                        modifier = Modifier
+                                                            .size(40.dp)
                                                     )
                                                 },
                                                 onClick = {
@@ -362,14 +370,16 @@ class NewsDisplay {
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
-                                                        "  Web Browser",
+                                                        "Web Browser",
                                                         textAlign = TextAlign.Center
                                                     )
                                                 },
                                                 leadingIcon = {
                                                     Icon(
                                                         painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_search_api_material),
-                                                        contentDescription = null
+                                                        contentDescription = null,
+                                                        modifier = Modifier
+                                                            .size(40.dp)
                                                     )
                                                 },
                                                 onClick = {
@@ -387,6 +397,43 @@ class NewsDisplay {
                                                     )
                                                     .align(Alignment.CenterHorizontally)
                                             )
+                                            DropdownMenuItem(
+                                                text = {
+                                                    Text(
+                                                        "  Back",
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                },
+                                                leadingIcon = {
+                                                    Icon(
+                                                        painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                                        contentDescription = null,
+                                                        modifier = Modifier
+                                                            .size(40.dp)
+                                                    )
+                                                },
+                                                onClick = {
+                                                    expanded = false
+                                                    showPageParser1 = false
+                                                    showPageParser = false
+
+                                                },
+                                                modifier = Modifier
+                                                    .border(
+                                                        BorderStroke(
+                                                            1.dp,
+                                                            MaterialTheme.colors.primary
+                                                        )
+                                                    )
+                                                    .align(Alignment.CenterHorizontally)
+                                            )
+                                            DropdownMenuItem(
+                                                text = { Text(text = "") },
+                                                onClick = {
+                                                    expanded = false
+                                                    showPageParser1 = false
+                                                    showPageParser = false
+                                                })
                                         }
                                     }
                                     if (showPageParser1) {
