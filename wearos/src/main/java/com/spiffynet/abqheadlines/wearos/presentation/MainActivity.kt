@@ -65,6 +65,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.wear.compose.foundation.ExperimentalWearFoundationApi
 import androidx.wear.compose.foundation.rememberActiveFocusRequester
+import androidx.wear.compose.material.Icon
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.PositionIndicator
 import androidx.wear.compose.material.Scaffold
@@ -323,18 +324,34 @@ fun WearApp() {
                                         .align(alignment = Alignment.CenterEnd),
                                 ) {
                                     DropdownMenuItem(
-                                        text = { Text(text = "              Text Reader", textAlign = TextAlign.Center) },
+                                        text = { Text(text = "Text Reader", textAlign = TextAlign.Center) },
+                                        leadingIcon = {
+                                            Image(
+                                                painter = painterResource(id = R.drawable.app_icon_round),
+                                                contentDescription = null
+                                            )
+                                        },
                                         onClick = {
-                                            toast1.show()
                                             expanded = false
                                             showPageParser1 = true
                                         },
                                         modifier = Modifier
-                                            .border(BorderStroke(1.dp,MaterialTheme.colors.primary))
+                                            .border(
+                                                BorderStroke(
+                                                    1.dp,
+                                                    MaterialTheme.colors.primary
+                                                )
+                                            )
                                             .align(Alignment.CenterHorizontally)
                                     )
                                     DropdownMenuItem(
-                                        text = { Text("             Web Browser", textAlign = TextAlign.Center) },
+                                        text = { Text("  Web Browser", textAlign = TextAlign.Center) },
+                                        leadingIcon = {
+                                            Icon(
+                                                painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_search_api_material),
+                                                contentDescription = null
+                                            )
+                                        },
                                         onClick = {
                                             expanded = false
                                             showPageParser1 = false
