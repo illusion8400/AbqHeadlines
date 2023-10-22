@@ -292,7 +292,10 @@ fun WearApp() {
                             @Composable
                             fun openLinkInTextReader() {
                                 Text(text = "")
-                                Image(painter = painterResource(id = R.drawable.app_icon_round), contentDescription = null)
+                                Image(
+                                    painter = painterResource(id = R.drawable.app_icon_round),
+                                    contentDescription = null
+                                )
                                 Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
                                     contentDescription = null,
                                     modifier = Modifier
@@ -315,28 +318,37 @@ fun WearApp() {
                                     expanded = expanded,
                                     onDismissRequest = { showPageParser = false },
                                     modifier = Modifier
+                                        .fillMaxWidth()
                                         .background(Color.Black)
-                                        .align(alignment = Alignment.TopCenter),
+                                        .align(alignment = Alignment.CenterEnd),
                                 ) {
                                     DropdownMenuItem(
-                                        text = { Text(text = "Text Reader") },
+                                        text = { Text(text = "              Text Reader", textAlign = TextAlign.Center) },
                                         onClick = {
                                             toast1.show()
                                             expanded = false
                                             showPageParser1 = true
                                         },
                                         modifier = Modifier
-                                            .border(BorderStroke(1.dp, MaterialTheme.colors.primary))
+                                            .border(BorderStroke(1.dp,MaterialTheme.colors.primary))
+                                            .align(Alignment.CenterHorizontally)
                                     )
                                     DropdownMenuItem(
-                                        text = { Text("Web Browser") },
+                                        text = { Text("             Web Browser", textAlign = TextAlign.Center) },
                                         onClick = {
-                                        expanded = false
-                                        showPageParser1 = false
-                                        openLinkInBrowser(selectedLink, launcher)
-                                        showPageParser = false
+                                            expanded = false
+                                            showPageParser1 = false
+                                            openLinkInBrowser(selectedLink, launcher)
+                                            showPageParser = false
                                         },
-                                        modifier = Modifier.border(BorderStroke(1.dp, MaterialTheme.colors.primary))
+                                        modifier = Modifier
+                                            .border(
+                                                BorderStroke(
+                                                    1.dp,
+                                                    MaterialTheme.colors.primary
+                                                )
+                                            )
+                                            .align(Alignment.CenterHorizontally)
                                     )
                                 }
                             }
