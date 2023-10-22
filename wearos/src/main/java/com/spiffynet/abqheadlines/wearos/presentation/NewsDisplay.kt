@@ -297,24 +297,27 @@ class NewsDisplay {
                                             modifier = Modifier
                                                 .fillMaxWidth()
                                                 .background(Color.Black)
-                                                .align(alignment = Alignment.CenterEnd),
+                                                .align(alignment = Alignment.BottomCenter),
                                         ) {
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
-                                                        text = "Text Reader",
+                                                        "  Front Page",
                                                         textAlign = TextAlign.Center
                                                     )
                                                 },
                                                 leadingIcon = {
-                                                    Image(
-                                                        painter = painterResource(id = R.drawable.app_icon_round),
+                                                    Icon(
+                                                        painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
                                                         contentDescription = null
                                                     )
                                                 },
                                                 onClick = {
                                                     expanded = false
-                                                    showPageParser1 = true
+                                                    showPageParser1 = false
+                                                    showPageParser = false
+                                                    goToFront = true
+
                                                 },
                                                 modifier = Modifier
                                                     .border(
@@ -356,22 +359,19 @@ class NewsDisplay {
                                             DropdownMenuItem(
                                                 text = {
                                                     Text(
-                                                        "  Front Page",
+                                                        text = "Text Reader",
                                                         textAlign = TextAlign.Center
                                                     )
                                                 },
                                                 leadingIcon = {
-                                                    Icon(
-                                                        painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                                    Image(
+                                                        painter = painterResource(id = R.drawable.app_icon_round),
                                                         contentDescription = null
                                                     )
                                                 },
                                                 onClick = {
                                                     expanded = false
-                                                    showPageParser1 = false
-                                                    showPageParser = false
-                                                    goToFront = true
-
+                                                    showPageParser1 = true
                                                 },
                                                 modifier = Modifier
                                                     .border(
