@@ -252,8 +252,6 @@ class NewsDisplay {
                                             ClickableText(
                                                 text = indentedTitle,
                                                 onClick = {
-                                                    // Open the link when the title is clicked
-//                                        openLinkInBrowser(link, launcher)
                                                     selectedLink = link
                                                     showPageParser = true
 

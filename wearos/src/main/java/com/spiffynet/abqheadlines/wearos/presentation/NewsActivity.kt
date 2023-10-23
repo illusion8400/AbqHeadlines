@@ -88,8 +88,12 @@ class NewsActivity : ComponentActivity() {
             try {
                 val kobDoc: Document = Jsoup.connect(kobUrl).get()
                 val kobTitles: List<Element> = kobDoc.select(
-                    "div.col-12.col-md-9.col-lg-8.col-xl-8.pb-2,div.col-8," +
-                            "div.col-12.col-sm-6.col-md-12.pb-2"
+                    "div.col-12.col-md-9.col-lg-8.col-xl-8.pb-2," +
+                            "div.col-12.col-sm-6.col-md-12.pb-2," +
+                            "#hbi2020-headlines-images-featured-standard-block_4e63aa739cc6847eb9f81dfcaa37103c > div > div > div > div.row.p-0.mx-0 > div > div > div.col-8.col-sm-9.col-md-7.col-lg-8," +
+                            "#hbi2020-headlines-must-see-block_d27b46167efacb8cf5843db6514e1288 > div > div > div > div > div > div," +
+                            "#hbi2020-headlines-must-see-block_d27b46167efacb8cf5843db6514e1288 > div > div > div > div > div > div," +
+                            "#hbi2020-headlines-must-see-block_87ddfeb0d84f772ca82df6def3bf09b1 > div > div > div > div > div > div"
                 )
                 // add title
                 val titleLead = "KOB"
