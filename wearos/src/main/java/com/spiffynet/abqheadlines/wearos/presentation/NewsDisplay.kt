@@ -22,6 +22,7 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -134,6 +135,7 @@ class NewsDisplay {
                             var selectedLink by remember { mutableStateOf<String?>(null) }
                             var showPageParser by remember { mutableStateOf(false) }
                             var showPageParser1 by remember { mutableStateOf(false) }
+                            var showLink by remember { mutableStateOf(false) }
                             LaunchedEffect(listState) { focusRequester.requestFocus() }
 
                             Column(
@@ -290,6 +292,23 @@ class NewsDisplay {
                                         )
                                         Text(text = "\n\n")
                                     }
+                                    @Composable
+                                    fun displayTheLink() {
+                                        Scaffold {
+                                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                                Spacer(modifier = Modifier.size(20.dp))
+                                                Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                                    contentDescription = null,
+                                                    modifier = Modifier
+                                                        .clickable { showPageParser = false }
+                                                )
+                                                Spacer(modifier = Modifier.size(25.dp))
+                                                Box(modifier = Modifier.fillMaxSize()) {
+                                                    selectedLink?.let { Text(text = it) }
+                                                }
+                                            }
+                                        }
+                                    }
                                     Box {
                                         var expanded by remember { mutableStateOf(true) }
                                         DropdownMenu(
@@ -426,6 +445,34 @@ class NewsDisplay {
                                                     .align(Alignment.CenterHorizontally)
                                             )
                                             DropdownMenuItem(
+                                                text = {
+                                                    Text(
+                                                        "Display Link",
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                },
+                                                leadingIcon = {
+                                                    Icon(
+                                                        painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_menu_share_mtrl_alpha),
+                                                        contentDescription = null,
+                                                        modifier = Modifier
+                                                            .size(40.dp)
+                                                    )
+                                                },
+                                                onClick = {
+                                                    expanded = false
+                                                    showLink = true
+                                                },
+                                                modifier = Modifier
+                                                    .border(
+                                                        BorderStroke(
+                                                            1.dp,
+                                                            MaterialTheme.colors.primary
+                                                        )
+                                                    )
+                                                    .align(Alignment.CenterHorizontally)
+                                            )
+                                            DropdownMenuItem(
                                                 text = { Text(text = "") },
                                                 onClick = {
                                                     expanded = false
@@ -436,6 +483,9 @@ class NewsDisplay {
                                     }
                                     if (showPageParser1) {
                                         openLinkInTextReader()
+                                    }
+                                    if (showLink) {
+                                        displayTheLink()
                                     }
                                 }
                             }
@@ -456,6 +506,6 @@ class NewsDisplay {
         } catch (e: ActivityNotFoundException) {
             // FIXME: Send link to phone or copy link with no browser
             Log.e("NoBrowser", "browser error", e)
+            }
         }
     }
-}
