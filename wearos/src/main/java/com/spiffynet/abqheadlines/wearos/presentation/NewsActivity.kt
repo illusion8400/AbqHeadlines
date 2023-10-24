@@ -38,6 +38,12 @@ class NewsActivity : ComponentActivity() {
                 }
             } catch (e: IOException) {
                 Log.e(TAG, "Error fetching KRQE news", e)
+                val titleLead = "KRQE - NOT AVAILABLE"
+                val link = "KRQE - NO LINK"
+                val result = HashMap<String, String>()
+                result["title"] = titleLead
+                result["link"] = link
+                results.add(result)
             }
         }
         else if (whichSite == "KOAT") {
@@ -79,6 +85,12 @@ class NewsActivity : ComponentActivity() {
                 }
             } catch (e: IOException) {
                 Log.e(TAG, "Error fetching KOAT news", e)
+                val titleLead = "KOAT - NOT AVAILABLE"
+                val link = "KOAT - NO LINK"
+                val result = HashMap<String, String>()
+                result["title"] = titleLead
+                result["link"] = link
+                results.add(result)
             }
         }
         else if (whichSite == "KOB") {
@@ -112,6 +124,12 @@ class NewsActivity : ComponentActivity() {
                 }
             } catch (e: IOException) {
                 Log.e(TAG, "Error fetching KOB news", e)
+                val titleLead = "KOB - NOT AVAILABLE"
+                val link = "KOB - NO LINK"
+                val result = HashMap<String, String>()
+                result["title"] = titleLead
+                result["link"] = link
+                results.add(result)
             }
         }
         return results
