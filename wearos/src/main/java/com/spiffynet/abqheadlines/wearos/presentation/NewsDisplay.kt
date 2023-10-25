@@ -22,6 +22,7 @@ import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,6 +44,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -255,7 +257,6 @@ class NewsDisplay {
                                                 onClick = {
                                                     selectedLink = link
                                                     showPageParser = true
-
                                                 },
                                                 // text colors
                                                 style = TextStyle(color = MaterialTheme.colors.primary),
@@ -267,7 +268,7 @@ class NewsDisplay {
                                     Text("")
                                     Text("")
 
-                                } else {
+                                } else { // PageParser
                                     @Composable
                                     fun openLinkInTextReader() {
                                         Text(text = "")
@@ -302,8 +303,18 @@ class NewsDisplay {
                                                 .clickable { showPageParser = false
                                                 showLink = false}
                                         )
+                                        Spacer(Modifier.size(25.dp))
                                         selectedLink?.let { link ->
-                                            Text(link)
+                                            Column(modifier = Modifier.drawBehind {
+                                                drawRect(Color.Blue)
+                                            }
+                                            ) {
+                                                Text(
+                                                    link,
+                                                    fontSize = 12.sp,
+                                                    textAlign = TextAlign.Center,
+                                                )
+                                            }
                                         }
                                     }
                                     Box {
