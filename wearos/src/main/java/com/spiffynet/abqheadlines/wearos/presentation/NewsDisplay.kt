@@ -134,6 +134,7 @@ class NewsDisplay {
                             var selectedLink by remember { mutableStateOf<String?>(null) }
                             var showPageParser by remember { mutableStateOf(false) }
                             var showPageParser1 by remember { mutableStateOf(false) }
+                            var showLink by remember { mutableStateOf(false) }
                             LaunchedEffect(listState) { focusRequester.requestFocus() }
 
                             Column(
@@ -277,7 +278,8 @@ class NewsDisplay {
                                         Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
                                             contentDescription = null,
                                             modifier = Modifier
-                                                .clickable { showPageParser = false }
+                                                .clickable { showPageParser = false
+                                                showPageParser1 = false}
                                         )
                                         selectedLink?.let { link ->
                                             PageParser().NewWear(url = link)
@@ -286,9 +288,23 @@ class NewsDisplay {
                                         Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
                                             contentDescription = null,
                                             modifier = Modifier
-                                                .clickable { showPageParser = false }
+                                                .clickable { showPageParser = false
+                                                showPageParser1 = false}
                                         )
                                         Text(text = "\n\n")
+                                    }
+                                    @Composable
+                                    fun displayLink() {
+                                        Text(text = "")
+                                        Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .clickable { showPageParser = false
+                                                showLink = false}
+                                        )
+                                        selectedLink?.let { link ->
+                                            Text(link)
+                                        }
                                     }
                                     Box {
                                         var expanded by remember { mutableStateOf(true) }
@@ -426,6 +442,32 @@ class NewsDisplay {
                                                     .align(Alignment.CenterHorizontally)
                                             )
                                             DropdownMenuItem(
+                                                text = {
+                                                    Text(
+                                                        text = "Display Link",
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                },
+                                                leadingIcon = {
+                                                    Image(
+                                                        painter = painterResource(id = R.drawable.app_icon_round),
+                                                        contentDescription = null
+                                                    )
+                                                },
+                                                onClick = {
+                                                    expanded = false
+                                                    showLink = true
+                                                },
+                                                modifier = Modifier
+                                                    .border(
+                                                        BorderStroke(
+                                                            1.dp,
+                                                            MaterialTheme.colors.primary
+                                                        )
+                                                    )
+                                                    .align(Alignment.CenterHorizontally)
+                                            )
+                                            DropdownMenuItem(
                                                 text = { Text(text = "") },
                                                 onClick = {
                                                     expanded = false
@@ -436,6 +478,9 @@ class NewsDisplay {
                                     }
                                     if (showPageParser1) {
                                         openLinkInTextReader()
+                                    }
+                                    if (showLink) {
+                                        displayLink()
                                     }
                                 }
                             }
