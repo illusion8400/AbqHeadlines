@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
 
         // Launch main app
         setContent {
-            FrontDisplay().Front_Page()
+            FrontDisplay().FrontPage()
         }
     }
 }

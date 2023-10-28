@@ -79,7 +79,7 @@ class NewsDisplay {
     fun WearApp(whichSite: String) {
         var goToFront by remember { mutableStateOf(false) }
         if (goToFront) {
-            FrontDisplay().Front_Page()
+            FrontDisplay().FrontPage()
         } else {
             var refreshing by remember { mutableStateOf(false) }
             // refresh

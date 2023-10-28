@@ -33,17 +33,18 @@ import com.spiffynet.abqheadlines.wearos.R
 
 class FrontDisplay {
     @Composable
-    fun Front_Page() {
+    fun FrontPage() {
         var goToNews by remember { mutableStateOf(false) }
         var whichSite by remember { mutableStateOf("") }
         // time for all
         TimeText(timeTextStyle = TextStyle(MaterialTheme.colors.primary))
-        // goto wearapp when whichsite is changed
+        // Animate to WearApp when whichSite is changed
         Crossfade(targetState = whichSite,
             label = "toWearApp",
         ) { whichSite ->
                 NewsDisplay().WearApp(whichSite = whichSite)
         }
+        // show frontPage
         if (!goToNews)  {
             Scaffold(
                 modifier = Modifier
