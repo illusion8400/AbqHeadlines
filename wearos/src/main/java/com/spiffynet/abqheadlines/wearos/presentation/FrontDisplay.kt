@@ -1,5 +1,6 @@
 package com.spiffynet.abqheadlines.wearos.presentation
 
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -35,17 +36,25 @@ class FrontDisplay {
     fun Front_Page() {
         var goToNews by remember { mutableStateOf(false) }
         var whichSite by remember { mutableStateOf("") }
+        // time for all
         TimeText(timeTextStyle = TextStyle(MaterialTheme.colors.primary))
-        if (goToNews) {
-            NewsDisplay().WearApp(whichSite = whichSite)
-        } else {
+        // goto wearapp when whichsite is changed
+        Crossfade(targetState = whichSite,
+            label = "toWearApp",
+        ) { whichSite ->
+                NewsDisplay().WearApp(whichSite = whichSite)
+        }
+        if (!goToNews)  {
             Scaffold(
                 modifier = Modifier
                     .fillMaxSize()
-                    .paint(painterResource(id = R.drawable.sandia),
+                    .paint(
+                        painterResource(id = R.drawable.sandia),
                         contentScale = ContentScale.FillBounds,
-                        sizeToIntrinsics = true),
+                        sizeToIntrinsics = true
+                    ),
             ) {
+                TimeText(timeTextStyle = TextStyle(MaterialTheme.colors.primary))
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
