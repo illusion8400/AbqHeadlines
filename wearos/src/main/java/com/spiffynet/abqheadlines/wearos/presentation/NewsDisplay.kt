@@ -316,6 +316,13 @@ class NewsDisplay {
                                                 )
                                             }
                                         }
+                                        Spacer(modifier = Modifier.size(12.dp))
+                                        Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .clickable { showPageParser = false
+                                                    showLink = false}
+                                        )
                                     }
                                     Box {
                                         var expanded by remember { mutableStateOf(true) }
