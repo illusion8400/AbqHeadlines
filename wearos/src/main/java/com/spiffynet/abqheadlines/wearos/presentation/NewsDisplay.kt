@@ -45,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -160,16 +161,19 @@ class NewsDisplay {
                                     Text("")
                                     // Title
                                     Card(
-                                        modifier = Modifier.padding(1.dp),
+                                        modifier = Modifier
+                                            .padding(1.dp)
+                                            .paint(painterResource(id = R.drawable.sandia))
+                                            .align(Alignment.CenterHorizontally),
                                         border = BorderStroke(1.dp, MaterialTheme.colors.primary),
                                         colors = CardDefaults.cardColors(
                                             containerColor = Color.Transparent
                                         ),
                                     ) {
                                         Text(
-                                            "  ABQHeadlines  ",
+                                            "                   ABQHeadlines",
                                             style = TextStyle(
-                                                color = MaterialTheme.colors.primary,
+                                                color = Color.Black,
                                                 fontWeight = FontWeight.Bold,
                                             )
                                         )
@@ -260,8 +264,6 @@ class NewsDisplay {
                                                 },
                                                 // text colors
                                                 style = TextStyle(color = MaterialTheme.colors.primary),
-                                                modifier = Modifier
-                                                    .fillMaxWidth()
                                             )
                                         }
                                     }
@@ -324,7 +326,9 @@ class NewsDisplay {
                                                     showLink = false}
                                         )
                                     }
-                                    Box {
+                                    Box(
+                                        contentAlignment = Alignment.Center
+                                    ) {
                                         var expanded by remember { mutableStateOf(true) }
                                         DropdownMenu(
                                             expanded = expanded,
