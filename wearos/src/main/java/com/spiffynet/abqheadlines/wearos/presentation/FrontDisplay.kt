@@ -1,9 +1,13 @@
 package com.spiffynet.abqheadlines.wearos.presentation
 
-import androidx.compose.animation.Crossfade
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,6 +29,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.wear.compose.material.CircularProgressIndicator
 import androidx.wear.compose.material.MaterialTheme
 import androidx.wear.compose.material.Scaffold
 import androidx.wear.compose.material.Text
@@ -32,17 +37,27 @@ import androidx.wear.compose.material.TimeText
 import com.spiffynet.abqheadlines.wearos.R
 
 class FrontDisplay {
+
     @Composable
     fun FrontPage() {
         var goToNews by remember { mutableStateOf(false) }
         var whichSite by remember { mutableStateOf("") }
+        var loading by remember { mutableStateOf(false) }
+        var state = remember {
+            MutableTransitionState(false).apply {
+                targetState = true
+            }
+        }
         // time for all
         TimeText(timeTextStyle = TextStyle(MaterialTheme.colors.primary))
         // Animate to WearApp when whichSite is changed
-        Crossfade(targetState = whichSite,
-            label = "toWearApp",
-        ) { whichSite ->
+
+        when (goToNews) {
+            true -> AnimatedVisibility(visibleState = state) {
                 NewsDisplay().WearApp(whichSite = whichSite)
+                loading = false
+            }
+            false -> {}
         }
         // show frontPage
         if (!goToNews)  {
@@ -80,7 +95,7 @@ class FrontDisplay {
                         modifier = Modifier
                             .size(45.dp)
                             .clickable {
-                                goToNews = true
+                                loading = true
                                 whichSite = "KRQE"
                             },
                         painter = painterResource(id = R.drawable.krqe_logo_round),
@@ -92,7 +107,7 @@ class FrontDisplay {
                         modifier = Modifier
                             .size(45.dp)
                             .clickable {
-                                goToNews = true
+                                loading = true
                                 whichSite = "KOAT"
                             },
                         painter = painterResource(id = R.drawable.koat_logo_round),
@@ -104,14 +119,36 @@ class FrontDisplay {
                         modifier = Modifier
                             .size(45.dp)
                             .clickable {
-                                goToNews = true
+                                loading = true
                                 whichSite = "KOB"
                             },
                         painter = painterResource(id = R.drawable.kob_logo_round),
                         contentDescription = null,
                         alignment = Alignment.Center
                     )
+                } // end column
+                if (loading) {
+                    CircularProgressIndicator(
+                        progress = 1.00f,
+                        modifier = Modifier.fillMaxSize(),
+                        startAngle = 0f,
+                        endAngle = 360f,
+                        strokeWidth = 4.dp,
+                    )
+                    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        Spacer(Modifier.size(35.dp))
+                        Box(
+                            modifier = Modifier
+                                .background(Color.Blue)
+                                .border(BorderStroke(1.dp, MaterialTheme.colors.primary)),
+                            ) {
+                                Text(text = "Loading...")
+                        }
+                    }
                 }
+            } // end scaffold
+            if (loading) {
+                goToNews = true
             }
         }
     }
