@@ -23,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -135,14 +136,19 @@ class FrontDisplay {
                         endAngle = 360f,
                         strokeWidth = 4.dp,
                     )
-                    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        Spacer(Modifier.size(35.dp))
-                        Box(
-                            modifier = Modifier
-                                .background(Color.Blue)
-                                .border(BorderStroke(1.dp, MaterialTheme.colors.primary)),
+                    AnimatedVisibility(visible = loading,modifier = Modifier.shadow(4.dp)){
+                        Column(
+                            Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Spacer(Modifier.size(35.dp))
+                            Box(
+                                modifier = Modifier
+                                    .background(Color.Blue)
+                                    .border(BorderStroke(1.dp, MaterialTheme.colors.primary)),
                             ) {
-                                Text(text = "Loading...")
+                                Text(text = " Loading... ")
+                            }
                         }
                     }
                 }
