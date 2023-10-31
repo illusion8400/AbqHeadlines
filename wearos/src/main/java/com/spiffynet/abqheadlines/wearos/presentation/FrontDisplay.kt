@@ -134,14 +134,17 @@ class FrontDisplay {
                         modifier = Modifier.fillMaxSize(),
                         startAngle = 0f,
                         endAngle = 360f,
+                        indicatorColor = Color.Blue,
                         strokeWidth = 4.dp,
                     )
-                    AnimatedVisibility(visible = loading,modifier = Modifier.shadow(4.dp)){
+                    AnimatedVisibility(visible = loading,
+                        modifier = Modifier.shadow(4.dp),
+                    ){
                         Column(
                             Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Spacer(Modifier.size(35.dp))
+                            Spacer(Modifier.size(32.dp))
                             Box(
                                 modifier = Modifier
                                     .background(Color.Blue)
