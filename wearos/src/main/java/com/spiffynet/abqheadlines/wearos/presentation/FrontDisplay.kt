@@ -51,113 +51,113 @@ class FrontDisplay {
         }
         // time for all
         TimeText(timeTextStyle = TextStyle(MaterialTheme.colors.primary))
-        // Animate to WearApp when whichSite is changed
 
+        // Animate to WearApp when whichSite is changed
         when (goToNews) {
             true -> AnimatedVisibility(visibleState = state) {
                 NewsDisplay().WearApp(whichSite = whichSite)
                 loading = false
             }
-            false -> {}
-        }
-        // show frontPage
-        if (!goToNews)  {
-            Scaffold(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .paint(
-                        painterResource(id = R.drawable.sandia),
-                        contentScale = ContentScale.FillBounds,
-                        sizeToIntrinsics = true
-                    ),
-            ) {
-                TimeText(timeTextStyle = TextStyle(MaterialTheme.colors.primary))
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
+            // show frontPage
+            false -> {
+                Scaffold(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .paint(
+                            painterResource(id = R.drawable.sandia),
+                            contentScale = ContentScale.FillBounds,
+                            sizeToIntrinsics = true
+                        ),
                 ) {
-                    Spacer(modifier = Modifier.size(24.dp))
-                    Card(
-                        border = BorderStroke(1.dp, MaterialTheme.colors.primary),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.Transparent
-                        )
+                    TimeText(timeTextStyle = TextStyle(MaterialTheme.colors.primary))
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(
-                            "  ABQHeadlines  ",
-                            style = TextStyle(
-                                color = Color.Black,
-                                fontWeight = FontWeight.Bold
+                        Spacer(modifier = Modifier.size(24.dp))
+                        Card(
+                            border = BorderStroke(1.dp, MaterialTheme.colors.primary),
+                            colors = CardDefaults.cardColors(
+                                containerColor = Color.Transparent
                             )
-                        )
-                    }
-                    Spacer(modifier = Modifier.size(12.dp))
-                    Image(
-                        modifier = Modifier
-                            .size(45.dp)
-                            .clickable {
-                                loading = true
-                                whichSite = "KRQE"
-                            },
-                        painter = painterResource(id = R.drawable.krqe_logo_round),
-                        contentDescription = null,
-                        alignment = Alignment.Center
-                    )
-                    Spacer(modifier = Modifier.size(5.dp))
-                    Image(
-                        modifier = Modifier
-                            .size(45.dp)
-                            .clickable {
-                                loading = true
-                                whichSite = "KOAT"
-                            },
-                        painter = painterResource(id = R.drawable.koat_logo_round),
-                        contentDescription = null,
-                        alignment = Alignment.Center
-                    )
-                    Spacer(modifier = Modifier.size(5.dp))
-                    Image(
-                        modifier = Modifier
-                            .size(45.dp)
-                            .clickable {
-                                loading = true
-                                whichSite = "KOB"
-                            },
-                        painter = painterResource(id = R.drawable.kob_logo_round),
-                        contentDescription = null,
-                        alignment = Alignment.Center
-                    )
-                } // end column
-                if (loading) {
-                    CircularProgressIndicator(
-                        progress = 1.00f,
-                        modifier = Modifier.fillMaxSize(),
-                        startAngle = 0f,
-                        endAngle = 360f,
-                        indicatorColor = Color.Blue,
-                        strokeWidth = 4.dp,
-                    )
-                    AnimatedVisibility(visible = loading,
-                        modifier = Modifier.shadow(4.dp),
-                    ){
-                        Column(
-                            Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Spacer(Modifier.size(32.dp))
-                            Box(
-                                modifier = Modifier
-                                    .background(Color.Blue)
-                                    .border(BorderStroke(1.dp, MaterialTheme.colors.primary)),
+                            Text(
+                                "  ABQHeadlines  ",
+                                style = TextStyle(
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold
+                                )
+                            )
+                        }
+                        Spacer(modifier = Modifier.size(12.dp))
+                        Image(
+                            modifier = Modifier
+                                .size(45.dp)
+                                .clickable {
+                                    loading = true
+                                    whichSite = "KRQE"
+                                },
+                            painter = painterResource(id = R.drawable.krqe_logo_round),
+                            contentDescription = null,
+                            alignment = Alignment.Center
+                        )
+                        Spacer(modifier = Modifier.size(5.dp))
+                        Image(
+                            modifier = Modifier
+                                .size(45.dp)
+                                .clickable {
+                                    loading = true
+                                    whichSite = "KOAT"
+                                },
+                            painter = painterResource(id = R.drawable.koat_logo_round),
+                            contentDescription = null,
+                            alignment = Alignment.Center
+                        )
+                        Spacer(modifier = Modifier.size(5.dp))
+                        Image(
+                            modifier = Modifier
+                                .size(45.dp)
+                                .clickable {
+                                    loading = true
+                                    whichSite = "KOB"
+                                },
+                            painter = painterResource(id = R.drawable.kob_logo_round),
+                            contentDescription = null,
+                            alignment = Alignment.Center
+                        )
+                    } // end column
+                    if (loading) {
+                        CircularProgressIndicator(
+                            progress = 1.00f,
+                            modifier = Modifier.fillMaxSize(),
+                            startAngle = 0f,
+                            endAngle = 360f,
+                            indicatorColor = Color.Blue,
+                            strokeWidth = 4.dp,
+                        )
+                        AnimatedVisibility(
+                            visible = loading,
+                            modifier = Modifier.shadow(4.dp),
+                        ) {
+                            Column(
+                                Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(text = " Loading... ")
+                                Spacer(Modifier.size(32.dp))
+                                Box(
+                                    modifier = Modifier
+                                        .background(Color.Blue)
+                                        .border(BorderStroke(1.dp, MaterialTheme.colors.primary)),
+                                ) {
+                                    Text(text = " Loading... ")
+                                }
                             }
                         }
                     }
+                } // end scaffold
+                if (loading) {
+                    goToNews = true
                 }
-            } // end scaffold
-            if (loading) {
-                goToNews = true
             }
         }
     }
