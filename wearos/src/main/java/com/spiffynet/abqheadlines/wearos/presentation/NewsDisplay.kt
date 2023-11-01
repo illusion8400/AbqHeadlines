@@ -5,9 +5,12 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.MutableTransitionState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -50,6 +53,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.rotary.onRotaryScrollEvent
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.ParagraphStyle
 import androidx.compose.ui.text.TextStyle
@@ -79,430 +83,462 @@ class NewsDisplay {
     @Composable
     fun WearApp(whichSite: String) {
         var goToFront by remember { mutableStateOf(false) }
-        if (goToFront) {
-            FrontDisplay().FrontPage()
-        } else {
-            var refreshing by remember { mutableStateOf(false) }
-            // refresh
-            LaunchedEffect(refreshing) {
-                if (refreshing) {
-                    delay(3000)
-                    refreshing = false
-                }
+        var localCon = LocalContext.current
+        var state = remember {
+            MutableTransitionState(false).apply {
+                targetState = true
             }
-            val listState = rememberScrollState()
-            SwipeRefresh(
-                state = rememberSwipeRefreshState(isRefreshing = refreshing),
-                onRefresh = { refreshing = true },
-            ) {
-                if (!refreshing) {
-                    Scaffold(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        positionIndicator = { PositionIndicator(scrollState = listState) }
-                    ) {
-                        val TAG = "WearApp"
-                        Log.i(TAG, "start")
+        }
+        when (goToFront) {
+            true -> AnimatedVisibility(visibleState = state) {
+                FrontDisplay().FrontPage()
+            }
+            false -> {
+                var refreshing by remember { mutableStateOf(false) }
+                // refresh
+                LaunchedEffect(refreshing) {
+                    if (refreshing) {
+                        Toast.makeText(localCon, "Loading... ", Toast.LENGTH_LONG).show()
+                        delay(3000)
+                        refreshing = false
+                    }
+                }
+                val listState = rememberScrollState()
+                SwipeRefresh(
+                    state = rememberSwipeRefreshState(isRefreshing = refreshing),
+                    onRefresh = { refreshing = true },
+                ) {
+                    if (!refreshing) {
+                        Scaffold(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            positionIndicator = { PositionIndicator(scrollState = listState) }
+                        ) {
+                            val TAG = "WearApp"
+                            Log.i(TAG, "start")
 
-                        val launcher =
-                            rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                                if (result.resultCode == Activity.RESULT_OK) {
-                                    // Handle the result, if needed
+                            val launcher =
+                                rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                                    if (result.resultCode == Activity.RESULT_OK) {
+                                        // Handle the result, if needed
+                                    }
                                 }
+
+                            // fetch news
+                            var results by rememberSaveable {
+                                mutableStateOf(
+                                    NewsActivity().fetchNews(
+                                        whichSite = whichSite
+                                    )
+                                )
+                            }
+                            if (refreshing) {
+                                results = NewsActivity().fetchNews(whichSite = whichSite)
                             }
 
-                        // fetch news
-                        var results by rememberSaveable {
-                            mutableStateOf(
-                                NewsActivity().fetchNews(
-                                    whichSite = whichSite
-                                )
-                            )
-                        }
-                        if (refreshing) {
-                            results = NewsActivity().fetchNews(whichSite = whichSite)
-                        }
+                            AbqHeadlinesTheme {
 
-                        AbqHeadlinesTheme {
-
-                            // Time at top
+                                // Time at top
 //                    TimeText(
 //                        timeTextStyle = TextStyle(MaterialTheme.colors.primary)
 //                    )
 
-                            // scrolling
-                            val flingBehavior: FlingBehavior = ScrollableDefaults.flingBehavior()
-                            val coroutineScope = rememberCoroutineScope()
-                            val focusRequester: FocusRequester = rememberActiveFocusRequester()
-                            var selectedLink by remember { mutableStateOf<String?>(null) }
-                            var showPageParser by remember { mutableStateOf(false) }
-                            var showPageParser1 by remember { mutableStateOf(false) }
-                            var showLink by remember { mutableStateOf(false) }
-                            LaunchedEffect(listState) { focusRequester.requestFocus() }
+                                // scrolling
+                                val flingBehavior: FlingBehavior =
+                                    ScrollableDefaults.flingBehavior()
+                                val coroutineScope = rememberCoroutineScope()
+                                val focusRequester: FocusRequester = rememberActiveFocusRequester()
+                                var selectedLink by remember { mutableStateOf<String?>(null) }
+                                var showPageParser by remember { mutableStateOf(false) }
+                                var showPageParser1 by remember { mutableStateOf(false) }
+                                var showLink by remember { mutableStateOf(false) }
+                                LaunchedEffect(listState) { focusRequester.requestFocus() }
 
-                            Column(
-                                modifier = Modifier
-                                    .verticalScroll(listState, flingBehavior = flingBehavior)
-                                    .onRotaryScrollEvent {
-                                        // handle rotary scroll events
-                                        coroutineScope.launch {
-                                            listState.scrollBy(it.verticalScrollPixels * 20)
-                                            listState.animateScrollBy(0f)
+                                Column(
+                                    modifier = Modifier
+                                        .verticalScroll(listState, flingBehavior = flingBehavior)
+                                        .onRotaryScrollEvent {
+                                            // handle rotary scroll events
+                                            coroutineScope.launch {
+                                                listState.scrollBy(it.verticalScrollPixels * 20)
+                                                listState.animateScrollBy(0f)
 
+                                            }
+                                            true
                                         }
-                                        true
-                                    }
-                                    .focusRequester(focusRequester)
-                                    .focusable(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                if (!showPageParser) {
-                                    showPageParser1 = false
-                                    Text("")
-                                    // Title
-                                    Card(
-                                        modifier = Modifier
-                                            .padding(1.dp)
-                                            .paint(painterResource(id = R.drawable.sandia))
-                                            .align(Alignment.CenterHorizontally),
-                                        border = BorderStroke(1.dp, MaterialTheme.colors.primary),
-                                        colors = CardDefaults.cardColors(
-                                            containerColor = Color.Transparent
-                                        ),
-                                    ) {
-                                        Text(
-                                            "                   ABQHeadlines",
-                                            style = TextStyle(
-                                                color = Color.Black,
-                                                fontWeight = FontWeight.Bold,
-                                            )
-                                        )
-                                    }
-
-
-                                    // pull results
-
-                                    for (item in results) {
-                                        val title = item["title"] ?: ""
-                                        val link = item["link"] ?: ""
-                                        // indent and center
-                                        val indentedTitle = buildAnnotatedString {
-                                            withStyle(
-                                                style = ParagraphStyle(
-                                                    textIndent = TextIndent(firstLine = 5.sp),
-                                                    textAlign = TextAlign.Center
-                                                )
-                                            ) {
-                                                append(title)
-                                            }
-                                        }
-                                        // icon and styling
-                                        when (title) {
-                                            "KRQE" -> {
-                                                Card(
-                                                    border = BorderStroke(1.dp, Color.Blue),
-                                                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-                                                ) {
-                                                    Image(
-                                                        painter = painterResource(id = R.drawable.krqe_logo_round),
-                                                        contentDescription = null,
-                                                        alignment = Alignment.Center
-                                                    )
-                                                }
-                                                continue
-                                            }
-
-                                            "KOAT" -> {
-                                                Card(
-                                                    border = BorderStroke(1.dp, Color.Green),
-                                                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-                                                ) {
-                                                    Image(
-                                                        painter = painterResource(id = R.drawable.koat_logo_round),
-                                                        contentDescription = null,
-                                                        alignment = Alignment.Center
-                                                    )
-                                                }
-                                                continue
-                                            }
-
-                                            "KOB" -> {
-                                                Card(
-                                                    border = BorderStroke(1.dp, Color.Red),
-                                                    colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-                                                ) {
-                                                    Image(
-                                                        painter = painterResource(id = R.drawable.kob_logo_round),
-                                                        contentDescription = null,
-                                                        alignment = Alignment.Center
-                                                    )
-                                                }
-                                                continue
-                                            }
-                                        }
+                                        .focusRequester(focusRequester)
+                                        .focusable(),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    if (!showPageParser) {
+                                        showPageParser1 = false
+                                        Text("")
+                                        // Title
                                         Card(
-                                            border =
-                                            if (link.contains("krqe")) {
-                                                BorderStroke(1.dp, Color.Blue)
-                                            } else if (link.contains("koat")) {
-                                                BorderStroke(1.dp, Color.Green)
-                                            } else if (link.contains("kob")) {
-                                                BorderStroke(1.dp, Color.Red)
-                                            } else {
-                                                BorderStroke(1.dp, Color.Magenta)
-                                            },
-
-                                            // background colors
-                                            colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+                                            modifier = Modifier
+                                                .padding(1.dp)
+                                                .paint(painterResource(id = R.drawable.sandia))
+                                                .align(Alignment.CenterHorizontally),
+                                            border = BorderStroke(
+                                                1.dp,
+                                                MaterialTheme.colors.primary
+                                            ),
+                                            colors = CardDefaults.cardColors(
+                                                containerColor = Color.Transparent
+                                            ),
                                         ) {
-
-                                            ClickableText(
-                                                text = indentedTitle,
-                                                onClick = {
-                                                    selectedLink = link
-                                                    showPageParser = true
-                                                },
-                                                // text colors
-                                                style = TextStyle(color = MaterialTheme.colors.primary),
+                                            Text(
+                                                "                   ABQHeadlines",
+                                                style = TextStyle(
+                                                    color = Color.Black,
+                                                    fontWeight = FontWeight.Bold,
+                                                )
                                             )
                                         }
-                                    }
-                                    Text("")
-                                    Text("")
 
-                                } else { // PageParser
-                                    @Composable
-                                    fun openLinkInTextReader() {
-                                        Text(text = "")
-                                        Image(
-                                            painter = painterResource(id = R.drawable.app_icon_round),
-                                            contentDescription = null
-                                        )
-                                        Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .clickable { showPageParser = false
-                                                showPageParser1 = false}
-                                        )
-                                        selectedLink?.let { link ->
-                                            PageParser().NewWear(url = link)
-                                        }
-                                        Text(text = "")
-                                        Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .clickable { showPageParser = false
-                                                showPageParser1 = false}
-                                        )
-                                        Text(text = "\n\n")
-                                    }
-                                    @Composable
-                                    fun displayLink() {
-                                        Text(text = "")
-                                        Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .clickable { showPageParser = false
-                                                showLink = false}
-                                        )
-                                        Spacer(Modifier.size(25.dp))
-                                        selectedLink?.let { link ->
-                                            Column(modifier = Modifier.drawBehind {
-                                                drawRect(Color.Blue)
+
+                                        // pull results
+
+                                        for (item in results) {
+                                            val title = item["title"] ?: ""
+                                            val link = item["link"] ?: ""
+                                            // indent and center
+                                            val indentedTitle = buildAnnotatedString {
+                                                withStyle(
+                                                    style = ParagraphStyle(
+                                                        textIndent = TextIndent(firstLine = 5.sp),
+                                                        textAlign = TextAlign.Center
+                                                    )
+                                                ) {
+                                                    append(title)
+                                                }
                                             }
+                                            // icon and styling
+                                            when (title) {
+                                                "KRQE" -> {
+                                                    Card(
+                                                        border = BorderStroke(1.dp, Color.Blue),
+                                                        colors = CardDefaults.cardColors(
+                                                            containerColor = Color.Transparent
+                                                        )
+                                                    ) {
+                                                        Image(
+                                                            painter = painterResource(id = R.drawable.krqe_logo_round),
+                                                            contentDescription = null,
+                                                            alignment = Alignment.Center
+                                                        )
+                                                    }
+                                                    continue
+                                                }
+
+                                                "KOAT" -> {
+                                                    Card(
+                                                        border = BorderStroke(1.dp, Color.Green),
+                                                        colors = CardDefaults.cardColors(
+                                                            containerColor = Color.Transparent
+                                                        )
+                                                    ) {
+                                                        Image(
+                                                            painter = painterResource(id = R.drawable.koat_logo_round),
+                                                            contentDescription = null,
+                                                            alignment = Alignment.Center
+                                                        )
+                                                    }
+                                                    continue
+                                                }
+
+                                                "KOB" -> {
+                                                    Card(
+                                                        border = BorderStroke(1.dp, Color.Red),
+                                                        colors = CardDefaults.cardColors(
+                                                            containerColor = Color.Transparent
+                                                        )
+                                                    ) {
+                                                        Image(
+                                                            painter = painterResource(id = R.drawable.kob_logo_round),
+                                                            contentDescription = null,
+                                                            alignment = Alignment.Center
+                                                        )
+                                                    }
+                                                    continue
+                                                }
+                                            }
+                                            Card(
+                                                border =
+                                                if (link.contains("krqe")) {
+                                                    BorderStroke(1.dp, Color.Blue)
+                                                } else if (link.contains("koat")) {
+                                                    BorderStroke(1.dp, Color.Green)
+                                                } else if (link.contains("kob")) {
+                                                    BorderStroke(1.dp, Color.Red)
+                                                } else {
+                                                    BorderStroke(1.dp, Color.Magenta)
+                                                },
+
+                                                // background colors
+                                                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
                                             ) {
-                                                Text(
-                                                    link,
-                                                    fontSize = 12.sp,
-                                                    textAlign = TextAlign.Center,
+
+                                                ClickableText(
+                                                    text = indentedTitle,
+                                                    onClick = {
+                                                        selectedLink = link
+                                                        showPageParser = true
+                                                    },
+                                                    // text colors
+                                                    style = TextStyle(color = MaterialTheme.colors.primary),
                                                 )
                                             }
                                         }
-                                        Spacer(modifier = Modifier.size(12.dp))
-                                        Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
-                                            contentDescription = null,
-                                            modifier = Modifier
-                                                .clickable { showPageParser = false
-                                                    showLink = false}
-                                        )
-                                    }
-                                    Box(
-                                        contentAlignment = Alignment.Center
-                                    ) {
-                                        var expanded by remember { mutableStateOf(true) }
-                                        DropdownMenu(
-                                            expanded = expanded,
-                                            onDismissRequest = { showPageParser = false },
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .background(Color.Black)
-                                                .align(alignment = Alignment.BottomCenter)
-                                                .scrollable(
-                                                    state = rememberScrollState(),
-                                                    orientation = Orientation.Vertical
-                                                ),
-                                        ) {
-                                            DropdownMenuItem(
-                                                modifier = Modifier.size(height = 33.dp, width = 10.dp),
-                                                text = { Text("") },
-                                                onClick = { expanded = false })
-                                            DropdownMenuItem(
-                                                text = {
-                                                    Text(
-                                                        "Front Page",
-                                                        textAlign = TextAlign.Center
-                                                    )
-                                                },
-                                                leadingIcon = {
-                                                    Icon(
-                                                        painter = painterResource(id = com.google.android.material.R.drawable.mtrl_ic_arrow_drop_up),
-                                                        contentDescription = null,
-                                                        modifier = Modifier
-                                                            .size(40.dp)
-                                                    )
-                                                },
-                                                onClick = {
-                                                    expanded = false
-                                                    showPageParser1 = false
-                                                    showPageParser = false
-                                                    goToFront = true
+                                        Text("")
+                                        Text("")
 
-                                                },
-                                                modifier = Modifier
-                                                    .border(
-                                                        BorderStroke(
-                                                            1.dp,
-                                                            MaterialTheme.colors.primary
-                                                        )
-                                                    )
-                                                    .align(Alignment.CenterHorizontally)
+                                    } else { // PageParser
+                                        @Composable
+                                        fun openLinkInTextReader() {
+                                            Text(text = "")
+                                            Image(
+                                                painter = painterResource(id = R.drawable.app_icon_round),
+                                                contentDescription = null
                                             )
-                                            DropdownMenuItem(
-                                                text = {
-                                                    Text(
-                                                        text = "Text Reader",
-                                                        textAlign = TextAlign.Center
-                                                    )
-                                                },
-                                                leadingIcon = {
-                                                    Image(
-                                                        painter = painterResource(id = R.drawable.app_icon_round),
-                                                        contentDescription = null
-                                                    )
-                                                },
-                                                onClick = {
-                                                    expanded = false
-                                                    showPageParser1 = true
-                                                },
+                                            Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                                contentDescription = null,
                                                 modifier = Modifier
-                                                    .border(
-                                                        BorderStroke(
-                                                            1.dp,
-                                                            MaterialTheme.colors.primary
-                                                        )
-                                                    )
-                                                    .align(Alignment.CenterHorizontally)
+                                                    .clickable {
+                                                        showPageParser = false
+                                                        showPageParser1 = false
+                                                    }
                                             )
-                                            DropdownMenuItem(
-                                                text = {
-                                                    Text(
-                                                        "Web Browser",
-                                                        textAlign = TextAlign.Center
-                                                    )
-                                                },
-                                                leadingIcon = {
-                                                    Icon(
-                                                        painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_search_api_material),
-                                                        contentDescription = null,
-                                                        modifier = Modifier
-                                                            .size(40.dp)
-                                                    )
-                                                },
-                                                onClick = {
-                                                    expanded = false
-                                                    showPageParser1 = false
-                                                    openLinkInBrowser(selectedLink, launcher)
-                                                    showPageParser = false
-                                                },
+                                            selectedLink?.let { link ->
+                                                PageParser().NewWear(url = link)
+                                            }
+                                            Text(text = "")
+                                            Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                                contentDescription = null,
                                                 modifier = Modifier
-                                                    .border(
-                                                        BorderStroke(
-                                                            1.dp,
-                                                            MaterialTheme.colors.primary
-                                                        )
-                                                    )
-                                                    .align(Alignment.CenterHorizontally)
+                                                    .clickable {
+                                                        showPageParser = false
+                                                        showPageParser1 = false
+                                                    }
                                             )
-                                            DropdownMenuItem(
-                                                text = {
-                                                    Text(
-                                                        "  Back",
-                                                        textAlign = TextAlign.Center
-                                                    )
-                                                },
-                                                leadingIcon = {
-                                                    Icon(
-                                                        painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
-                                                        contentDescription = null,
-                                                        modifier = Modifier
-                                                            .size(40.dp)
-                                                    )
-                                                },
-                                                onClick = {
-                                                    expanded = false
-                                                    showPageParser1 = false
-                                                    showPageParser = false
-
-                                                },
-                                                modifier = Modifier
-                                                    .border(
-                                                        BorderStroke(
-                                                            1.dp,
-                                                            MaterialTheme.colors.primary
-                                                        )
-                                                    )
-                                                    .align(Alignment.CenterHorizontally)
-                                            )
-                                            DropdownMenuItem(
-                                                text = {
-                                                    Text(
-                                                        text = "Display Link",
-                                                        textAlign = TextAlign.Center
-                                                    )
-                                                },
-                                                leadingIcon = {
-                                                    Image(
-                                                        painter = painterResource(id = R.drawable.app_icon_round),
-                                                        contentDescription = null
-                                                    )
-                                                },
-                                                onClick = {
-                                                    expanded = false
-                                                    showLink = true
-                                                },
-                                                modifier = Modifier
-                                                    .border(
-                                                        BorderStroke(
-                                                            1.dp,
-                                                            MaterialTheme.colors.primary
-                                                        )
-                                                    )
-                                                    .align(Alignment.CenterHorizontally)
-                                            )
-                                            DropdownMenuItem(
-                                                text = { Text(text = "") },
-                                                onClick = {
-                                                    expanded = false
-                                                    showPageParser1 = false
-                                                    showPageParser = false
-                                                })
+                                            Text(text = "\n\n")
                                         }
-                                    }
-                                    if (showPageParser1) {
-                                        openLinkInTextReader()
-                                    }
-                                    if (showLink) {
-                                        displayLink()
+
+                                        @Composable
+                                        fun displayLink() {
+                                            Text(text = "")
+                                            Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .clickable {
+                                                        showPageParser = false
+                                                        showLink = false
+                                                    }
+                                            )
+                                            Spacer(Modifier.size(25.dp))
+                                            selectedLink?.let { link ->
+                                                Column(modifier = Modifier.drawBehind {
+                                                    drawRect(Color.Blue)
+                                                }
+                                                ) {
+                                                    Text(
+                                                        link,
+                                                        fontSize = 12.sp,
+                                                        textAlign = TextAlign.Center,
+                                                    )
+                                                }
+                                            }
+                                            Spacer(modifier = Modifier.size(12.dp))
+                                            Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                                contentDescription = null,
+                                                modifier = Modifier
+                                                    .clickable {
+                                                        showPageParser = false
+                                                        showLink = false
+                                                    }
+                                            )
+                                        }
+                                        Box(
+                                            contentAlignment = Alignment.Center
+                                        ) {
+                                            var expanded by remember { mutableStateOf(true) }
+                                            DropdownMenu(
+                                                expanded = expanded,
+                                                onDismissRequest = { showPageParser = false },
+                                                modifier = Modifier
+                                                    .fillMaxWidth()
+                                                    .background(Color.Black)
+                                                    .align(alignment = Alignment.BottomCenter)
+                                                    .scrollable(
+                                                        state = rememberScrollState(),
+                                                        orientation = Orientation.Vertical
+                                                    ),
+                                            ) {
+                                                DropdownMenuItem(
+                                                    modifier = Modifier.size(
+                                                        height = 33.dp,
+                                                        width = 10.dp
+                                                    ),
+                                                    text = { Text("") },
+                                                    onClick = { expanded = false })
+                                                DropdownMenuItem(
+                                                    text = {
+                                                        Text(
+                                                            "Front Page",
+                                                            textAlign = TextAlign.Center
+                                                        )
+                                                    },
+                                                    leadingIcon = {
+                                                        Icon(
+                                                            painter = painterResource(id = com.google.android.material.R.drawable.mtrl_ic_arrow_drop_up),
+                                                            contentDescription = null,
+                                                            modifier = Modifier
+                                                                .size(40.dp)
+                                                        )
+                                                    },
+                                                    onClick = {
+                                                        expanded = false
+                                                        showPageParser1 = false
+                                                        showPageParser = false
+                                                        goToFront = true
+
+                                                    },
+                                                    modifier = Modifier
+                                                        .border(
+                                                            BorderStroke(
+                                                                1.dp,
+                                                                MaterialTheme.colors.primary
+                                                            )
+                                                        )
+                                                        .align(Alignment.CenterHorizontally)
+                                                )
+                                                DropdownMenuItem(
+                                                    text = {
+                                                        Text(
+                                                            text = "Text Reader",
+                                                            textAlign = TextAlign.Center
+                                                        )
+                                                    },
+                                                    leadingIcon = {
+                                                        Image(
+                                                            painter = painterResource(id = R.drawable.app_icon_round),
+                                                            contentDescription = null
+                                                        )
+                                                    },
+                                                    onClick = {
+                                                        expanded = false
+                                                        showPageParser1 = true
+                                                    },
+                                                    modifier = Modifier
+                                                        .border(
+                                                            BorderStroke(
+                                                                1.dp,
+                                                                MaterialTheme.colors.primary
+                                                            )
+                                                        )
+                                                        .align(Alignment.CenterHorizontally)
+                                                )
+                                                DropdownMenuItem(
+                                                    text = {
+                                                        Text(
+                                                            "Web Browser",
+                                                            textAlign = TextAlign.Center
+                                                        )
+                                                    },
+                                                    leadingIcon = {
+                                                        Icon(
+                                                            painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_search_api_material),
+                                                            contentDescription = null,
+                                                            modifier = Modifier
+                                                                .size(40.dp)
+                                                        )
+                                                    },
+                                                    onClick = {
+                                                        expanded = false
+                                                        showPageParser1 = false
+                                                        openLinkInBrowser(selectedLink, launcher)
+                                                        showPageParser = false
+                                                    },
+                                                    modifier = Modifier
+                                                        .border(
+                                                            BorderStroke(
+                                                                1.dp,
+                                                                MaterialTheme.colors.primary
+                                                            )
+                                                        )
+                                                        .align(Alignment.CenterHorizontally)
+                                                )
+                                                DropdownMenuItem(
+                                                    text = {
+                                                        Text(
+                                                            "  Back",
+                                                            textAlign = TextAlign.Center
+                                                        )
+                                                    },
+                                                    leadingIcon = {
+                                                        Icon(
+                                                            painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
+                                                            contentDescription = null,
+                                                            modifier = Modifier
+                                                                .size(40.dp)
+                                                        )
+                                                    },
+                                                    onClick = {
+                                                        expanded = false
+                                                        showPageParser1 = false
+                                                        showPageParser = false
+
+                                                    },
+                                                    modifier = Modifier
+                                                        .border(
+                                                            BorderStroke(
+                                                                1.dp,
+                                                                MaterialTheme.colors.primary
+                                                            )
+                                                        )
+                                                        .align(Alignment.CenterHorizontally)
+                                                )
+                                                DropdownMenuItem(
+                                                    text = {
+                                                        Text(
+                                                            text = "Display Link",
+                                                            textAlign = TextAlign.Center
+                                                        )
+                                                    },
+                                                    leadingIcon = {
+                                                        Image(
+                                                            painter = painterResource(id = R.drawable.app_icon_round),
+                                                            contentDescription = null
+                                                        )
+                                                    },
+                                                    onClick = {
+                                                        expanded = false
+                                                        showLink = true
+                                                    },
+                                                    modifier = Modifier
+                                                        .border(
+                                                            BorderStroke(
+                                                                1.dp,
+                                                                MaterialTheme.colors.primary
+                                                            )
+                                                        )
+                                                        .align(Alignment.CenterHorizontally)
+                                                )
+                                                DropdownMenuItem(
+                                                    text = { Text(text = "") },
+                                                    onClick = {
+                                                        expanded = false
+                                                        showPageParser1 = false
+                                                        showPageParser = false
+                                                    })
+                                            }
+                                        }
+                                        if (showPageParser1) {
+                                            openLinkInTextReader()
+                                        }
+                                        if (showLink) {
+                                            displayLink()
+                                        }
                                     }
                                 }
                             }
@@ -513,16 +549,16 @@ class NewsDisplay {
         }
     }
 
-    fun openLinkInBrowser(link: String?, launcher: ActivityResultLauncher<Intent>) {
+        fun openLinkInBrowser(link: String?, launcher: ActivityResultLauncher<Intent>) {
 
-        val uri = Uri.parse(link)
-        val intent = Intent(Intent.ACTION_VIEW, uri)
+            val uri = Uri.parse(link)
+            val intent = Intent(Intent.ACTION_VIEW, uri)
 
-        try {
-            launcher.launch(intent)
-        } catch (e: ActivityNotFoundException) {
-            // FIXME: Send link to phone or copy link with no browser
-            Log.e("NoBrowser", "browser error", e)
+            try {
+                launcher.launch(intent)
+            } catch (e: ActivityNotFoundException) {
+                // FIXME: Send link to phone or copy link with no browser
+                Log.e("NoBrowser", "browser error", e)
+            }
         }
     }
-}
