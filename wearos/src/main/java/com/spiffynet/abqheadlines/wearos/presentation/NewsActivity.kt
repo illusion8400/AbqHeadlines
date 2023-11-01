@@ -96,9 +96,11 @@ class NewsActivity : ComponentActivity() {
         else if (whichSite == "KOB") {
             // KOB
             val kobUrl = "http://www.kob.com"
+            val kobUrl2 = "http://www.kob.com/albuquerque-metro"
             Log.i(TAG, "Pulled kob")
             try {
                 val kobDoc: Document = Jsoup.connect(kobUrl).get()
+                val kobDoc2: Document = Jsoup.connect(kobUrl2).get()
                 val kobTitles: List<Element> = kobDoc.select(
                     "div.col-12.col-md-9.col-lg-8.col-xl-8.pb-2," +
                             "div.col-12.col-sm-6.col-md-12.pb-2," +
@@ -107,6 +109,7 @@ class NewsActivity : ComponentActivity() {
                             "#hbi2020-headlines-must-see-block_d27b46167efacb8cf5843db6514e1288 > div > div > div > div > div > div," +
                             "#hbi2020-headlines-must-see-block_87ddfeb0d84f772ca82df6def3bf09b1 > div > div > div > div > div > div"
                 )
+                val kobTitles2: List<Element> = kobDoc2.select("body > main > div:nth-child(3) > div > div.col-12.col-lg-9.hbi2020-archive-block > div > div:nth-child(3) > div > div")
                 // add title
                 val titleLead = "KOB"
                 val result = HashMap<String, String>()
@@ -116,6 +119,16 @@ class NewsActivity : ComponentActivity() {
                 // start
                 for (element in kobTitles) {
                     val title = element.text().trim()
+                    if (title == "") {continue}
+                    val link = element.select("a").attr("href")
+                    val result = HashMap<String, String>()
+                    result["title"] = title
+                    result["link"] = link
+                    results.add(result)
+                }
+                for (element in kobTitles2) {
+                    val title = element.text().trim()
+                    if (title == "") {continue}
                     val link = element.select("a").attr("href")
                     val result = HashMap<String, String>()
                     result["title"] = title
