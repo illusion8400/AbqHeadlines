@@ -147,7 +147,7 @@ class FrontDisplay {
                                 Box(
                                     modifier = Modifier
                                         .background(Color.Blue)
-                                        .border(BorderStroke(1.dp, MaterialTheme.colors.primary)),
+                                        .border(BorderStroke(2.dp, MaterialTheme.colors.primary)),
                                 ) {
                                     Text(text = " Loading... ")
                                 }
