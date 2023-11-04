@@ -1,6 +1,6 @@
 package com.spiffynet.abqheadlines.wearos.presentation
 
-import android.app.Activity
+import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
@@ -80,12 +80,13 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class NewsDisplay {
+    @SuppressLint("PrivateResource", "MutableCollectionMutableState")
     @OptIn(ExperimentalWearFoundationApi::class)
     @Composable
     fun WearApp(whichSite: String) {
         var goToFront by remember { mutableStateOf(false) }
-        var localCon = LocalContext.current
-        var state = remember {
+        val localCon = LocalContext.current
+        val state = remember {
             MutableTransitionState(false).apply {
                 targetState = true
             }
@@ -122,11 +123,7 @@ class NewsDisplay {
                             Log.i(TAG, "start")
 
                             val launcher =
-                                rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                                    if (result.resultCode == Activity.RESULT_OK) {
-                                        // Handle the result, if needed
-                                    }
-                                }
+                                rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {}
 
                             // fetch news
                             var results by rememberSaveable {
