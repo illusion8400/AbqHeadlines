@@ -268,14 +268,11 @@ class NewsDisplay {
                                                 }
                                                 Card(
                                                     border =
-                                                    if (link.contains("krqe")) {
-                                                        BorderStroke(1.dp, Color.Blue)
-                                                    } else if (link.contains("koat")) {
-                                                        BorderStroke(1.dp, Color.Green)
-                                                    } else if (link.contains("kob")) {
-                                                        BorderStroke(1.dp, Color.Red)
-                                                    } else {
-                                                        BorderStroke(1.dp, Color.Magenta)
+                                                    when {
+                                                        (link.contains("krqe")) -> BorderStroke(1.dp, Color.Blue)
+                                                        (link.contains("koat")) -> BorderStroke(1.dp, Color.Green)
+                                                        (link.contains("kob")) -> BorderStroke(1.dp, Color.Red)
+                                                        else -> BorderStroke(1.dp, Color.Magenta)
                                                     },
 
                                                     // background colors
