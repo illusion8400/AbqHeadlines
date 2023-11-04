@@ -6,6 +6,7 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -88,6 +89,9 @@ class NewsDisplay {
             MutableTransitionState(false).apply {
                 targetState = true
             }
+        }
+        BackHandler {
+            goToFront = true
         }
         when (goToFront) {
             true -> AnimatedVisibility(visibleState = state) {
@@ -296,6 +300,10 @@ class NewsDisplay {
                                         true -> { // PageParser
                                             @Composable
                                             fun openLinkInTextReader() {
+                                                BackHandler {
+                                                    showPageParser = false
+                                                    showPageParser1 = false
+                                                }
                                                 Text(text = "")
                                                 Image(
                                                     painter = painterResource(id = R.drawable.app_icon_round),
@@ -326,6 +334,10 @@ class NewsDisplay {
 
                                             @Composable
                                             fun displayLink() {
+                                                BackHandler {
+                                                    showPageParser = false
+                                                    showLink = false
+                                                }
                                                 Text(text = "")
                                                 Image(painter = painterResource(id = com.google.android.material.R.drawable.abc_ic_ab_back_material),
                                                     contentDescription = null,
