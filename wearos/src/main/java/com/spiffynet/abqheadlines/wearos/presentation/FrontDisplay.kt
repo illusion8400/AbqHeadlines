@@ -44,7 +44,7 @@ class FrontDisplay {
         var goToNews by remember { mutableStateOf(false) }
         var whichSite by remember { mutableStateOf("") }
         var loading by remember { mutableStateOf(false) }
-        var state = remember {
+        val state = remember {
             MutableTransitionState(false).apply {
                 targetState = true
             }
