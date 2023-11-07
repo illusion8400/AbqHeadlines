@@ -349,6 +349,10 @@ class NewsDisplay {
                                                     ) {
                                                         Text(
                                                             link,
+                                                            modifier = Modifier
+                                                                .clickable {
+                                                                    openLinkInBrowser(link, launcher)
+                                                                },
                                                             fontSize = 12.sp,
                                                             textAlign = TextAlign.Center,
                                                         )
